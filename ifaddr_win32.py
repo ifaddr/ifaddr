@@ -4,7 +4,7 @@ import ipaddress
 import ctypes
 from ctypes import wintypes
 
-from ifaddr_shared import Interface
+from ifaddr_shared import Interface, sockaddr, sockaddr_in, sockaddr_in6
 
 NO_ERROR=0
 ERROR_BUFFER_OVERFLOW = 111
@@ -15,22 +15,7 @@ AF_INET = 2
 AF_INET6 = 10
 
 
-class sockaddr(ctypes.Structure):
-    _fields_= [('sa_familiy', ctypes.c_ushort),
-               ('sa_data', ctypes.c_byte * 14)]
 
-class sockaddr_in(ctypes.Structure):
-    _fields_= [('sin_familiy', ctypes.c_ushort),
-               ('sin_port', ctypes.c_ushort),
-               ('sin_addr', ctypes.c_byte * 4),
-               ('sin_zero', ctypes.c_byte * 8)]
-    
-class sockaddr_in6(ctypes.Structure):
-    _fields_= [('sin6_familiy', ctypes.c_ushort),
-               ('sin6_port', ctypes.c_ushort),
-               ('sin6_flowinfo', ctypes.c_ulong),
-               ('sin6_addr', ctypes.c_byte * 16),
-               ('sin6_scope_id', ctypes.c_ulong)]
     
 class SOCKET_ADDRESS(ctypes.Structure):
     _fields_ = [('lpSockaddr', ctypes.POINTER(sockaddr)),
@@ -85,7 +70,7 @@ def get_ip_from_address(address):
         flowinfo = ipv6[0].sin6_flowinfo
         ippacked = bytes(bytearray(ipv6[0].sin6_addr))
         ip = str(ipaddress.ip_address(ippacked))
-        scope_id = ipv6[0].scope_id
+        scope_id = ipv6[0].sin6_scope_id
         return (ip, flowinfo, scope_id)
 
 def enumerate_interfaces_of_adapter(name, nice_name, address):
