@@ -10,6 +10,7 @@ setup(
     long_description=long_description,
     author='Stefan C. Mueller',
     author_email='stefan.mueller@fhnw.ch',
+    url='https://github.com/smurn/ifaddr',
     packages = find_packages(),
     install_requires = ['ipaddress'],
 )

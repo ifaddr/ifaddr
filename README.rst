@@ -50,7 +50,7 @@ Documentation
 -------------
 
 The complete documentation (there isn't much to document) can be found here:
-`ifaddr Documentation  <http://smurn.github.io/ifaddr>`_.
+`ifaddr Documentation  <http://pythonhosted.org/ifaddr/>`_.
 
 -----------------------------------
 Bug Reports and other contributions

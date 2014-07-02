@@ -65,6 +65,12 @@ And two simple classes:
    
 .. autoclass:: ifaddr.IP
    :members: ip, network_prefix, nice_name
+   
+-----------------------------------
+Bug Reports and other contributions
+-----------------------------------
+
+This project is hosted here `ifaddr github page <https://github.com/smurn/ifaddr>`_.
 
 ------------
 Alternatives
