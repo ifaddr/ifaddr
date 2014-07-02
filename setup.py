@@ -26,7 +26,7 @@ with open('README.rst') as f:
 
 setup(
     name = 'ifaddr',
-    version = '0.1.0',
+    version = '0.1.1',
     description='Enumerates all IP addresses on all network adapters of the system.',
     long_description=long_description,
     author='Stefan C. Mueller',
