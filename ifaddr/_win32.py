@@ -1,24 +1,21 @@
 # Copyright (C) 2014 Stefan C. Mueller
 
-import ipaddress
 import ctypes
 from ctypes import wintypes
 
-from ifaddr_shared import Interface, sockaddr, sockaddr_in, sockaddr_in6
+import ifaddr._shared as shared
 
 NO_ERROR=0
 ERROR_BUFFER_OVERFLOW = 111
 MAX_ADAPTER_NAME_LENGTH = 256
 MAX_ADAPTER_DESCRIPTION_LENGTH = 128
 MAX_ADAPTER_ADDRESS_LENGTH = 8
-AF_INET = 2
-AF_INET6 = 10
-
+AF_UNSPEC = 0
 
 
     
 class SOCKET_ADDRESS(ctypes.Structure):
-    _fields_ = [('lpSockaddr', ctypes.POINTER(sockaddr)),
+    _fields_ = [('lpSockaddr', ctypes.POINTER(shared.sockaddr)),
                ('iSockaddrLength', wintypes.INT)]
     
 class IP_ADAPTER_UNICAST_ADDRESS(ctypes.Structure):
@@ -29,7 +26,6 @@ IP_ADAPTER_UNICAST_ADDRESS._fields_ = \
      ('Next', ctypes.POINTER(IP_ADAPTER_UNICAST_ADDRESS)),
      ('Address', SOCKET_ADDRESS),
      ('PrefixOrigin', ctypes.c_uint),
-     ('SuffixOrigin', ctypes.c_uint),
      ('SuffixOrigin', ctypes.c_uint),
      ('DadState', ctypes.c_uint),
      ('ValidLifetime', wintypes.ULONG),
@@ -54,26 +50,10 @@ IP_ADAPTER_ADDRESSES._fields_ = [('Length', wintypes.ULONG),
                                  ]
 
 
-
 iphlpapi = ctypes.windll.LoadLibrary("Iphlpapi")
 
 
-def get_ip_from_address(address):
-    generic = address.lpSockaddr
-    if generic[0].sa_familiy == AF_INET:
-        ipv4 = ctypes.cast(address.lpSockaddr, ctypes.POINTER(sockaddr_in))
-        ippacked = bytes(bytearray(ipv4[0].sin_addr))
-        ip = str(ipaddress.ip_address(ippacked))
-        return ip
-    elif generic[0].sa_familiy == AF_INET6:
-        ipv6 = ctypes.cast(address.lpSockaddr, ctypes.POINTER(sockaddr_in6))
-        flowinfo = ipv6[0].sin6_flowinfo
-        ippacked = bytes(bytearray(ipv6[0].sin6_addr))
-        ip = str(ipaddress.ip_address(ippacked))
-        scope_id = ipv6[0].sin6_scope_id
-        return (ip, flowinfo, scope_id)
-
-def enumerate_interfaces_of_adapter(name, nice_name, address):
+def enumerate_interfaces_of_adapter(nice_name, address):
     
     # Iterate through linked list and fill list
     addresses = []
@@ -84,9 +64,9 @@ def enumerate_interfaces_of_adapter(name, nice_name, address):
         address = address.Next[0]
         
     for address in addresses:
-        ip = get_ip_from_address(address.Address)
+        ip = shared.sockaddr_to_ip(address.Address.lpSockaddr)
         network_prefix = address.OnLinkPrefixLength
-        yield Interface(name, ip, network_prefix, nice_name)
+        yield shared.IP(ip, network_prefix, nice_name)
     
     
 def enumerate_interfaces():
@@ -96,7 +76,7 @@ def enumerate_interfaces():
     addressbuffer = ctypes.create_string_buffer(addressbuffersize.value)
     retval = ERROR_BUFFER_OVERFLOW
     while retval == ERROR_BUFFER_OVERFLOW:
-        retval = iphlpapi.GetAdaptersAddresses(wintypes.ULONG(AF_INET),
+        retval = iphlpapi.GetAdaptersAddresses(wintypes.ULONG(AF_UNSPEC),
                                       wintypes.ULONG(0),
                                       None,
                                       ctypes.byref(addressbuffer),
@@ -119,11 +99,11 @@ def enumerate_interfaces():
     for adapter_info in address_infos:
         
         name = adapter_info.AdapterName
-        nice_name = adapter_info.Description + " / " + adapter_info.FriendlyName
+        nice_name = adapter_info.Description
         
         if adapter_info.FirstUnicastAddress:
-            ips = enumerate_interfaces_of_adapter(name, nice_name, adapter_info.FirstUnicastAddress[0])
-            
-            result.extend(ips)
+            ips = enumerate_interfaces_of_adapter(adapter_info.FriendlyName, adapter_info.FirstUnicastAddress[0])
+            ips = list(ips)
+            result.append(shared.Adapter(name, nice_name, ips))
 
     return result
