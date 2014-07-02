@@ -6,7 +6,9 @@ Created on 02.07.2014
 
 import ifaddr
 
-if __name__ == '__main__':
-    
-    
-    print "\n".join(map(str, ifaddr.enumerate_interfaces()))
+adapters = ifaddr.get_adapters()
+
+for adapter in adapters:
+    print "IPs of network adapter " + adapter.nice_name
+    for ip in adapter.ips:
+        print "   IP %s/%s" % (ip.ip, ip.network_prefix)

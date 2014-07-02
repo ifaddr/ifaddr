@@ -18,7 +18,7 @@ ifaddrs._fields_ = [('ifa_next', ctypes.POINTER(ifaddrs)),
 
 libc = ctypes.CDLL(ctypes.util.find_library("c"), use_errno=True)
 
-def enumerate_interfaces():
+def get_adapters():
     
     addr = ctypes.POINTER(ifaddrs)()
     retval = libc.getifaddrs(ctypes.byref(addr))

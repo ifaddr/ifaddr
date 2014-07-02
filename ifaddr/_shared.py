@@ -9,32 +9,26 @@ class Adapter(object):
     Represents a network interface device controller (NIC), such as a
     network card. An adapter can have multiple IPs.
     
-    In Linux, the :attr:`name` is of the `eth0` or `eth0:1` style. 
-    The :attr:`nice_name` is currently the same as :attr:`name`;
-    This may change in future versions.
-    Aliasing (multiple IPs per physical NIC) is implemented
+    On Linux aliasing (multiple IPs per physical NIC) is implemented
     by creating 'virtual' adapters, each represented by an instance
     of this class. Each of those 'virtual' adapters can have both
     a IPv4 and an IPv6 IP address.
-    
-    In Windows, the :attr:`name` is a UUID in string representation,
-    such as `{846EE342-7039-11DE-9D20-806E6F6E6963}`. The :attr:`nice_name`
-    is the same as you would find in the system control panel, for example
-    `Intel(R) 82579LM Gigabit Network Connection`. 
     """
     
     def __init__(self, name, nice_name, ips):
         
         #: Unique name that identifies the adapter in the system.
-        #: For Linux is this of the form of `eth0` or `eth0:1`, for
+        #: On Linux this is of the form of `eth0` or `eth0:1`, on
         #: Windows it is a UUID in string representation, such as
         #: `{846EE342-7039-11DE-9D20-806E6F6E6963}`.
         self.name = name
         
-        #: Human readable name of the adpater.
+        #: Human readable name of the adpater. On Linux this
+        #: is currently the same as :attr:`name`. On Windows
+        #: this is the name of the device.
         self.nice_name = nice_name
 
-        #: List of :class:`IP` instances in the order they were
+        #: List of :class:`ifaddr.IP` instances in the order they were
         #: reported by the system.
         self.ips = ips
         
@@ -66,8 +60,8 @@ class IP(object):
         self.network_prefix = network_prefix
         
         #: Human readable name for this IP. 
-        #: In Linux is this currently the same as the adapter name.
-        #: In Windows this is the name of the network connection
+        #: On Linux is this currently the same as the adapter name.
+        #: On Windows this is the name of the network connection
         #: as configured in the system control panel.
         self.nice_name = nice_name
         
@@ -93,31 +87,6 @@ class IP(object):
             ip = repr(self.ip),
             network_prefix = repr(self.network_prefix),
             nice_name = repr(self.nice_name)                                                                          
-        )
-
-
-class Interface(object):
-    
-    def __init__(self, adapter, ip, network_prefix, nice_name):
-        
-        #: Name of the adapter to which this IP belongs
-        self.adapter = adapter
-        
-        #: IP address in string representation
-        self.ip = ip
-        
-        #: Number of bits of the network part (netmask)
-        self.network_prefix = network_prefix
-        
-        #: Human readable name for this interface.
-        self.nice_name = nice_name
-        
-    def __repr__(self):
-        return "Interface(adapter={adapter}, ip={ip}, network_prefix={network_prefix}, nice_name={nice_name})".format(
-            adapter=repr(self.adapter),
-            ip=repr(self.ip),
-            network_prefix=repr(self.network_prefix),
-            nice_name=repr(self.nice_name)
         )
         
         

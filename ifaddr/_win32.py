@@ -69,7 +69,7 @@ def enumerate_interfaces_of_adapter(nice_name, address):
         yield shared.IP(ip, network_prefix, nice_name)
     
     
-def enumerate_interfaces():
+def get_adapters():
     
     # Call GetAdaptersAddresses() with error and buffer size handling
     addressbuffersize = wintypes.ULONG(15*1024)
