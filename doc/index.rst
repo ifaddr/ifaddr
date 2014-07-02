@@ -7,6 +7,8 @@ ifaddr - Enumerate IP addresses on the local network adapters
 IP addresses of the computer. It is tested on **Linux**, **OS X**, and
 **Windows**.
 
+This library is open source and released under the MIT License.
+
 You can install it with `pip install ifaddr`. It doesn't need to
 compile anything, so there shouldn't be any surprises. Even on Windows.
 
@@ -76,8 +78,8 @@ This project is hosted here `ifaddr github page <https://github.com/smurn/ifaddr
 Alternatives
 ------------
 
-There is `netifaces  <https://pypi.python.org/pypi/netifaces>`_ which can do 
-everything this library can, and more. The only drawback is that it needs
+Alastair Houghton develops `netifaces  <https://pypi.python.org/pypi/netifaces>`_ 
+which can do  everything this library can, and more. The only drawback is that it needs
 to be compiled, which can make the installation difficult.
 
 
