@@ -1,0 +1,229 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ifaddr - Enumerate IP addresses on the local network adapters &mdash; ifaddr 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="ifaddr 0.1.0 documentation" href="#" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="#">ifaddr 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">ifaddr - Enumerate IP addresses on the local network adapters</a><ul>
+<li><a class="reference internal" href="#let-s-get-going">Let&#8217;s get going!</a></li>
+<li><a class="reference internal" href="#api">API</a></li>
+<li><a class="reference internal" href="#alternatives">Alternatives</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="ifaddr-enumerate-ip-addresses-on-the-local-network-adapters">
+<h1>ifaddr - Enumerate IP addresses on the local network adapters<a class="headerlink" href="#ifaddr-enumerate-ip-addresses-on-the-local-network-adapters" title="Permalink to this headline">¶</a></h1>
+<p><cite>ifaddr</cite> is a small Python library that allows you to find all the
+IP addresses of the computer. It is tested on <strong>Linux</strong>, <strong>OS X</strong>, and
+<strong>Windows</strong>.</p>
+<p>You can install it with <cite>pip install ifaddr</cite>. It doesn&#8217;t need to
+compile anything, so there shouldn&#8217;t be any surprises. Even on Windows.</p>
+<div class="section" id="let-s-get-going">
+<h2>Let&#8217;s get going!<a class="headerlink" href="#let-s-get-going" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">ifaddr</span>
+
+<span class="n">adapters</span> <span class="o">=</span> <span class="n">ifaddr</span><span class="o">.</span><span class="n">get_adapters</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">adapter</span> <span class="ow">in</span> <span class="n">adapters</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;IPs of network adapter &quot;</span> <span class="o">+</span> <span class="n">adapter</span><span class="o">.</span><span class="n">nice_name</span>
+    <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">adapter</span><span class="o">.</span><span class="n">ips</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">&quot;   </span><span class="si">%s</span><span class="s">/</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ip</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="n">ip</span><span class="o">.</span><span class="n">network_prefix</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will print:</p>
+<div class="highlight-none"><div class="highlight"><pre>IPs of network adapter H5321 gw Mobile Broadband Driver
+   IP (&#39;fe80::9:ebdf:30ab:39a3&#39;, 0L, 17L)/64
+   IP 169.254.57.163/16
+IPs of network adapter Intel(R) Centrino(R) Advanced-N 6205
+   IP (&#39;fe80::481f:3c9d:c3f6:93f8&#39;, 0L, 12L)/64
+   IP 192.168.0.51/24
+IPs of network adapter Intel(R) 82579LM Gigabit Network Connection
+   IP (&#39;fe80::85cd:e07e:4f7a:6aa6&#39;, 0L, 11L)/64
+   IP 192.168.0.53/24
+IPs of network adapter Software Loopback Interface 1
+   IP (&#39;::1&#39;, 0L, 0L)/128
+   IP 127.0.0.1/8
+</pre></div>
+</div>
+<p>You get both IPv4 and IPv6 addresses. The later complete with
+flowinfo and scope_id.</p>
+</div>
+<div class="section" id="api">
+<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<p>The library has only one function:</p>
+<dl class="function">
+<dt id="ifaddr.get_adapters">
+<tt class="descclassname">ifaddr.</tt><tt class="descname">get_adapters</tt><big>(</big><big>)</big><a class="headerlink" href="#ifaddr.get_adapters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Receives all the network adapters with their IP addresses.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">List of <a class="reference internal" href="#ifaddr.Adapter" title="ifaddr.Adapter"><tt class="xref py py-class docutils literal"><span class="pre">ifaddr.Adapter</span></tt></a> instances in the order
+they are provided by the operating system.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>And two simple classes:</p>
+<dl class="class">
+<dt id="ifaddr.Adapter">
+<em class="property">class </em><tt class="descclassname">ifaddr.</tt><tt class="descname">Adapter</tt><big>(</big><em>name</em>, <em>nice_name</em>, <em>ips</em><big>)</big><a class="headerlink" href="#ifaddr.Adapter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a network interface device controller (NIC), such as a
+network card. An adapter can have multiple IPs.</p>
+<p>On Linux aliasing (multiple IPs per physical NIC) is implemented
+by creating &#8216;virtual&#8217; adapters, each represented by an instance
+of this class. Each of those &#8216;virtual&#8217; adapters can have both
+a IPv4 and an IPv6 IP address.</p>
+<dl class="attribute">
+<dt id="ifaddr.Adapter.ips">
+<tt class="descname">ips</tt><em class="property"> = None</em><a class="headerlink" href="#ifaddr.Adapter.ips" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of <a class="reference internal" href="#ifaddr.IP" title="ifaddr.IP"><tt class="xref py py-class docutils literal"><span class="pre">ifaddr.IP</span></tt></a> instances in the order they were
+reported by the system.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ifaddr.Adapter.name">
+<tt class="descname">name</tt><em class="property"> = None</em><a class="headerlink" href="#ifaddr.Adapter.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unique name that identifies the adapter in the system.
+On Linux this is of the form of <cite>eth0</cite> or <cite>eth0:1</cite>, on
+Windows it is a UUID in string representation, such as
+<cite>{846EE342-7039-11DE-9D20-806E6F6E6963}</cite>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ifaddr.Adapter.nice_name">
+<tt class="descname">nice_name</tt><em class="property"> = None</em><a class="headerlink" href="#ifaddr.Adapter.nice_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Human readable name of the adpater. On Linux this
+is currently the same as <tt class="xref py py-attr docutils literal"><span class="pre">name</span></tt>. On Windows
+this is the name of the device.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ifaddr.IP">
+<em class="property">class </em><tt class="descclassname">ifaddr.</tt><tt class="descname">IP</tt><big>(</big><em>ip</em>, <em>network_prefix</em>, <em>nice_name</em><big>)</big><a class="headerlink" href="#ifaddr.IP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents an IP address of an adapter.</p>
+<dl class="attribute">
+<dt id="ifaddr.IP.ip">
+<tt class="descname">ip</tt><em class="property"> = None</em><a class="headerlink" href="#ifaddr.IP.ip" title="Permalink to this definition">¶</a></dt>
+<dd><p>IP address. For IPv4 addresses this is a string in
+&#8220;xxx.xxx.xxx.xxx&#8221; format. For IPv6 addresses this
+is a three-tuple <cite>(ip, flowinfo, scope_id)</cite>, where
+<cite>ip</cite> is a string in the usual collon separated
+hex format.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ifaddr.IP.network_prefix">
+<tt class="descname">network_prefix</tt><em class="property"> = None</em><a class="headerlink" href="#ifaddr.IP.network_prefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of bits of the IP that represent the
+network. For a <cite>255.255.255.0</cite> netmask, this
+number would be <cite>24</cite>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ifaddr.IP.nice_name">
+<tt class="descname">nice_name</tt><em class="property"> = None</em><a class="headerlink" href="#ifaddr.IP.nice_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Human readable name for this IP.
+On Linux is this currently the same as the adapter name.
+On Windows this is the name of the network connection
+as configured in the system control panel.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="alternatives">
+<h2>Alternatives<a class="headerlink" href="#alternatives" title="Permalink to this headline">¶</a></h2>
+<p>There is <a class="reference external" href="https://pypi.python.org/pypi/netifaces">netifaces</a> which can do
+everything this library can, and more. The only drawback is that it needs
+to be compiled, which can make the installation difficult.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="#">ifaddr 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Stefan C. Mueller.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>
