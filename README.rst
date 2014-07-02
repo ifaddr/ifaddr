@@ -46,12 +46,18 @@ You get both IPv4 and IPv6 addresses. The later complete with
 flowinfo and scope_id.
 
 -------------
-Documentation
+Documentation 
 -------------
 
 The complete documentation (there isn't much to document) can be found here:
-TODO.
+`ifaddr Documentation  <http://smurn.github.io/ifaddr>`_.
 
+-----------------------------------
+Bug Reports and other contributions
+-----------------------------------
+
+This project is hosted here `ifaddr github page <https://github.com/smurn/ifaddr>`_.
+ 
 ------------
 Alternatives
 ------------
