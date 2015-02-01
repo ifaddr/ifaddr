@@ -91,10 +91,11 @@ def enumerate_interfaces_of_adapter(nice_name, address):
 def get_adapters():
     
     # Call GetAdaptersAddresses() with error and buffer size handling
+
     addressbuffersize = wintypes.ULONG(15*1024)
-    addressbuffer = ctypes.create_string_buffer(addressbuffersize.value)
     retval = ERROR_BUFFER_OVERFLOW
     while retval == ERROR_BUFFER_OVERFLOW:
+        addressbuffer = ctypes.create_string_buffer(addressbuffersize.value)
         retval = iphlpapi.GetAdaptersAddresses(wintypes.ULONG(AF_UNSPEC),
                                       wintypes.ULONG(0),
                                       None,
