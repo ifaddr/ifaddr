@@ -57,6 +57,8 @@ def get_adapters():
         name = addr[0].ifa_name
         ip = shared.sockaddr_to_ip(addr[0].ifa_addr)
         if ip:
+            if addr[0].ifa_netmask and not addr[0].ifa_netmask[0].sa_familiy:
+                addr[0].ifa_netmask[0].sa_familiy = addr[0].ifa_addr[0].sa_familiy
             netmask = shared.sockaddr_to_ip(addr[0].ifa_netmask)
             if isinstance(netmask, tuple):
                 netmask = netmask[0]
