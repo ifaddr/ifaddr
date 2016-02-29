@@ -39,7 +39,7 @@ libc = ctypes.CDLL(ctypes.util.find_library("c"), use_errno=True)
 
 def get_adapters():
     
-    addr = ctypes.POINTER(ifaddrs)()
+    addr0 = addr = ctypes.POINTER(ifaddrs)()
     retval = libc.getifaddrs(ctypes.byref(addr))
     if retval != 0:
         eno = ctypes.get_errno()
@@ -66,5 +66,7 @@ def get_adapters():
             ip = shared.IP(ip, prefixlen, name)
             add_ip(name, ip)
         addr = addr[0].ifa_next
+
+    libc.freeifaddrs(addr0)
 
     return ips.values()
