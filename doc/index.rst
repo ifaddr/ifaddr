@@ -63,11 +63,48 @@ The library has only one function:
 And two simple classes:
      
 .. autoclass:: ifaddr.Adapter
-   :members: name, ips, nice_name
-   
+
+  .. py:attribute:: name
+
+    Unique name that identifies the adapter in the system.
+    On Linux this is of the form of `eth0` or `eth0:1`, on
+    Windows it is a UUID in string representation, such as
+    `{846EE342-7039-11DE-9D20-806E6F6E6963}`.
+
+  .. py:attribute:: nice_name
+
+    Human readable name of the adpater. On Linux this
+    is currently the same as :attr:`name`. On Windows
+    this is the name of the device.
+
+  .. py:attribute:: ips
+
+    List of :class:`ifaddr.IP` instances in the order they were
+    reported by the system.
+
 .. autoclass:: ifaddr.IP
-   :members: ip, network_prefix, nice_name
-   
+
+  .. py:attribute:: ip
+
+        IP address. For IPv4 addresses this is a string in
+        "xxx.xxx.xxx.xxx" format. For IPv6 addresses this
+        is a three-tuple `(ip, flowinfo, scope_id)`, where
+        `ip` is a string in the usual collon separated
+        hex format.
+
+  .. py:attribute:: network_prefix
+
+        Number of bits of the IP that represent the
+        network. For a `255.255.255.0` netmask, this
+        number would be `24`.
+
+  .. py:attribute:: nice_name
+
+        Human readable name for this IP.
+        On Linux is this currently the same as the adapter name.
+        On Windows this is the name of the network connection
+        as configured in the system control panel.
+
 -----------------------------------
 Bug Reports and other contributions
 -----------------------------------

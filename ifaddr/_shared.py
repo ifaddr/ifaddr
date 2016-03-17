@@ -23,68 +23,25 @@ import ctypes
 import socket
 import ipaddress
 import platform
+import collections
 
-class Adapter(object):
+class Adapter(collections.namedtuple('Adapter', ('name','nice_name','ips'))):
     """
     Represents a network interface device controller (NIC), such as a
     network card. An adapter can have multiple IPs.
-    
+
     On Linux aliasing (multiple IPs per physical NIC) is implemented
     by creating 'virtual' adapters, each represented by an instance
     of this class. Each of those 'virtual' adapters can have both
     a IPv4 and an IPv6 IP address.
     """
-    
-    def __init__(self, name, nice_name, ips):
-        
-        #: Unique name that identifies the adapter in the system.
-        #: On Linux this is of the form of `eth0` or `eth0:1`, on
-        #: Windows it is a UUID in string representation, such as
-        #: `{846EE342-7039-11DE-9D20-806E6F6E6963}`.
-        self.name = name
-        
-        #: Human readable name of the adpater. On Linux this
-        #: is currently the same as :attr:`name`. On Windows
-        #: this is the name of the device.
-        self.nice_name = nice_name
-
-        #: List of :class:`ifaddr.IP` instances in the order they were
-        #: reported by the system.
-        self.ips = ips
-        
-    def __repr__(self):
-        return "Adapter(name={name}, nice_name={nice_name}, ips={ips})".format(
-           name = repr(self.name),
-           nice_name = repr(self.nice_name),
-           ips = repr(self.ips)
-        )
 
 
-class IP(object):
+class IP(collections.namedtuple('IP', ('ip','network_prefix','nice_name'))):
     """
     Represents an IP address of an adapter.
     """
-    
-    def __init__(self, ip, network_prefix, nice_name):
-        
-        #: IP address. For IPv4 addresses this is a string in
-        #: "xxx.xxx.xxx.xxx" format. For IPv6 addresses this
-        #: is a three-tuple `(ip, flowinfo, scope_id)`, where
-        #: `ip` is a string in the usual collon separated
-        #: hex format.
-        self.ip = ip
-        
-        #: Number of bits of the IP that represent the
-        #: network. For a `255.255.255.0` netmask, this
-        #: number would be `24`.
-        self.network_prefix = network_prefix
-        
-        #: Human readable name for this IP. 
-        #: On Linux is this currently the same as the adapter name.
-        #: On Windows this is the name of the network connection
-        #: as configured in the system control panel.
-        self.nice_name = nice_name
-        
+
     @property
     def is_IPv4(self):
         """
@@ -100,16 +57,6 @@ class IP(object):
         if it is an IPv4 address.
         """
         return isinstance(self.ip, tuple)
-    
-    
-    def __repr__(self):
-        return "IP(ip={ip}, network_prefix={network_prefix}, nice_name={nice_name})".format(
-            ip = repr(self.ip),
-            network_prefix = repr(self.network_prefix),
-            nice_name = repr(self.nice_name)                                                                          
-        )
-        
-        
 
 
 if platform.system() == "Darwin":
@@ -157,8 +104,8 @@ else:
                    ('sin6_flowinfo', ctypes.c_ulong),
                    ('sin6_addr', ctypes.c_byte * 16),
                    ('sin6_scope_id', ctypes.c_ulong)]
-    
-    
+
+
 def sockaddr_to_ip(sockaddr_ptr):
     if sockaddr_ptr[0].sa_familiy == socket.AF_INET:
         ipv4 = ctypes.cast(sockaddr_ptr, ctypes.POINTER(sockaddr_in))
