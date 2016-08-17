@@ -19,6 +19,7 @@
 # IN THE SOFTWARE.
 
 
+import sys
 import os
 import ctypes.util
 import ipaddress
@@ -51,10 +52,12 @@ def get_adapters():
         if not adapter_name in ips:
             ips[adapter_name] = shared.Adapter(adapter_name, adapter_name, [])
         ips[adapter_name].ips.append(ip)
-            
-
+    
+    
     while addr:
         name = addr[0].ifa_name
+        if sys.version_info[0] > 2:
+            name = name.decode(encoding='UTF-8')
         ip = shared.sockaddr_to_ip(addr[0].ifa_addr)
         if ip:
             if addr[0].ifa_netmask and not addr[0].ifa_netmask[0].sa_familiy:
@@ -62,9 +65,17 @@ def get_adapters():
             netmask = shared.sockaddr_to_ip(addr[0].ifa_netmask)
             if isinstance(netmask, tuple):
                 netmask = netmask[0]
-                prefixlen = shared.ipv6_prefixlength(ipaddress.IPv6Address(unicode(netmask)))
+                if sys.version_info[0] > 2:
+                    netmaskStr = str(netmask)
+                else:
+                    netmaskStr = unicode(netmask)
+                prefixlen = shared.ipv6_prefixlength(ipaddress.IPv6Address(netmaskStr))
             else:
-                prefixlen = ipaddress.IPv4Network(unicode('0.0.0.0/' + netmask)).prefixlen
+                if sys.version_info[0] > 2:
+                    netmaskStr = str('0.0.0.0/' + netmask)
+                else:
+                    netmaskStr = unicode('0.0.0.0/' + netmask)
+                prefixlen = ipaddress.IPv4Network(netmaskStr).prefixlen
             ip = shared.IP(ip, prefixlen, name)
             add_ip(name, ip)
         addr = addr[0].ifa_next
