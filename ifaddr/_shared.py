@@ -122,41 +122,41 @@ if platform.system() == "Darwin":
     class sockaddr(ctypes.Structure):
         _fields_= [('sa_len', ctypes.c_uint8),
                    ('sa_familiy', ctypes.c_uint8),
-                   ('sa_data', ctypes.c_byte * 14)]
+                   ('sa_data', ctypes.c_uint8 * 14)]
     
     class sockaddr_in(ctypes.Structure):
         _fields_= [('sa_len', ctypes.c_uint8),
                    ('sa_familiy', ctypes.c_uint8),
-                   ('sin_port', ctypes.c_ushort),
-                   ('sin_addr', ctypes.c_byte * 4),
-                   ('sin_zero', ctypes.c_byte * 8)]
+                   ('sin_port', ctypes.c_uint16),
+                   ('sin_addr', ctypes.c_uint8 * 4),
+                   ('sin_zero', ctypes.c_uint8 * 8)]
         
     class sockaddr_in6(ctypes.Structure):
         _fields_= [('sa_len', ctypes.c_uint8),
                    ('sa_familiy', ctypes.c_uint8),
-                   ('sin6_port', ctypes.c_ushort),
-                   ('sin6_flowinfo', ctypes.c_ulong),
-                   ('sin6_addr', ctypes.c_byte * 16),
-                   ('sin6_scope_id', ctypes.c_ulong)]
+                   ('sin6_port', ctypes.c_uint16),
+                   ('sin6_flowinfo', ctypes.c_uint32),
+                   ('sin6_addr', ctypes.c_uint8 * 16),
+                   ('sin6_scope_id', ctypes.c_uint32)]
 
 else:
 
     class sockaddr(ctypes.Structure):
-        _fields_= [('sa_familiy', ctypes.c_ushort),
-                   ('sa_data', ctypes.c_byte * 14)]
+        _fields_= [('sa_familiy', ctypes.c_uint16),
+                   ('sa_data', ctypes.c_uint8 * 14)]
     
     class sockaddr_in(ctypes.Structure):
-        _fields_= [('sin_familiy', ctypes.c_ushort),
-                   ('sin_port', ctypes.c_ushort),
-                   ('sin_addr', ctypes.c_byte * 4),
-                   ('sin_zero', ctypes.c_byte * 8)]
+        _fields_= [('sin_familiy', ctypes.c_uint16),
+                   ('sin_port', ctypes.c_uint16),
+                   ('sin_addr', ctypes.c_uint8 * 4),
+                   ('sin_zero', ctypes.c_uint8 * 8)]
         
     class sockaddr_in6(ctypes.Structure):
-        _fields_= [('sin6_familiy', ctypes.c_ushort),
-                   ('sin6_port', ctypes.c_ushort),
-                   ('sin6_flowinfo', ctypes.c_ulong),
-                   ('sin6_addr', ctypes.c_byte * 16),
-                   ('sin6_scope_id', ctypes.c_ulong)]
+        _fields_= [('sin6_familiy', ctypes.c_uint16),
+                   ('sin6_port', ctypes.c_uint16),
+                   ('sin6_flowinfo', ctypes.c_uint32),
+                   ('sin6_addr', ctypes.c_uint8 * 16),
+                   ('sin6_scope_id', ctypes.c_uint32)]
     
     
 def sockaddr_to_ip(sockaddr_ptr):
