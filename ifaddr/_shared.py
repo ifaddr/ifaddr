@@ -177,4 +177,8 @@ def sockaddr_to_ip(sockaddr_ptr):
 
 
 def ipv6_prefixlength(address):
-    return sum(bin(ord(b)).count("1") for b in address.packed)
+    prefix_length = 0
+    for i in range(address.max_prefixlen):
+        if int(address) >> i & 1:
+            prefix_length = prefix_length + 1
+    return prefix_length
