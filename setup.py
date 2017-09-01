@@ -29,12 +29,12 @@ else:
 
 setup(
     name = 'ifaddr',
-    version = '0.1.4-dev',
+    version = '0.1.4',
     description='Enumerates all IP addresses on all network adapters of the system.',
     long_description=long_description,
     author='Stefan C. Mueller',
-    author_email='stefan.mueller@fhnw.ch',
-    url='https://github.com/smurn/ifaddr',
+    author_email='scm@smurn.org',
+    url='https://github.com/pydron/ifaddr',
     packages = find_packages(),
     install_requires = ['ipaddress'],
 )
