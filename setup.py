@@ -29,7 +29,7 @@ else:
 
 setup(
     name = 'ifaddr',
-    version = '0.1.3',
+    version = '0.1.4-dev',
     description='Enumerates all IP addresses on all network adapters of the system.',
     long_description=long_description,
     author='Stefan C. Mueller',
