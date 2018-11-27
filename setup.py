@@ -36,5 +36,5 @@ setup(
     author_email='scm@smurn.org',
     url='https://github.com/pydron/ifaddr',
     packages = find_packages(),
-    install_requires = ['ipaddress'],
+    install_requires = ['ipaddress;python_version<"3.3"'],
 )
