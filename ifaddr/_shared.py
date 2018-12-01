@@ -112,9 +112,9 @@ class IP(object):
         
 
 
-if platform.system() == "Darwin":
+if platform.system() == "Darwin" or platform.system() == "OpenBSD":
     
-    # Darwin uses marginally different structures
+    # Darwin and OpenBSD use marginally different structures
     # than either Linux or Windows.
     # I still keep it in `shared` since we can use
     # both structures equally.
