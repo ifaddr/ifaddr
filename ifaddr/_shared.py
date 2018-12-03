@@ -109,12 +109,10 @@ class IP(object):
             nice_name = repr(self.nice_name)                                                                          
         )
         
-        
 
-
-if platform.system() == "Darwin" or platform.system() == "OpenBSD":
+if platform.system() == "Darwin" or "BSD" in platform.system():
     
-    # Darwin and OpenBSD use marginally different structures
+    # BSD derived systems use marginally different structures
     # than either Linux or Windows.
     # I still keep it in `shared` since we can use
     # both structures equally.

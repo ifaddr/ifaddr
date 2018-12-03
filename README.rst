@@ -5,7 +5,8 @@ ifaddr - Enumerate IP addresses on the local network adapters
 
 `ifaddr` is a small Python library that allows you to find all the
 IP addresses of the computer. It is tested on **Linux**, **OS X**, and
-**Windows**.
+**Windows**. Other BSD derivatives like **OpenBSD**, **FreeBSD**, and
+**NetBSD** should work too, but I haven't personally tested those.
 
 This library is open source and released under the MIT License.
 
