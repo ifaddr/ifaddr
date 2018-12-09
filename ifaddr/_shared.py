@@ -35,7 +35,20 @@ class Adapter(object):
     a IPv4 and an IPv6 IP address.
     """
 
-    def __init__(self, name, nice_name, ips, index=None):
+    def __init__(
+        self,
+        name,
+        nice_name,
+        ips,
+        index=None,
+        dhcp_enabled=None,
+        dhcp_server=None,
+        dhcp_lease_obtained=None,
+        dhcp_lease_expires=None,
+        wins_enabled=None,
+        wins_primary_server=None,
+        wins_secondary_server=None,
+    ):
 
         #: Unique name that identifies the adapter in the system.
         #: On Linux this is of the form of `eth0` or `eth0:1`, on
@@ -54,6 +67,15 @@ class Adapter(object):
 
         #: Adapter index as used by some API (e.g. IPv6 multicast group join).
         self.index = index
+
+        # windows specific bits
+        self.wins_enabled = wins_enabled
+        self.wins_primary_server = wins_primary_server
+        self.wins_secondary_server = wins_secondary_server
+        self.dhcp_enabled = dhcp_enabled
+        self.dhcp_server = dhcp_server
+        self.dhcp_lease_obtained = dhcp_lease_obtained
+        self.dhcp_lease_expires = dhcp_lease_expires
 
     def __repr__(self):
         return "Adapter(name={name}, nice_name={nice_name}, ips={ips}, index={index})".format(
@@ -89,6 +111,8 @@ class IP(object):
         #: as configured in the system control panel.
         self.nice_name = nice_name
 
+        self.gateways = []
+
     @property
     def is_IPv4(self):
         """
@@ -107,10 +131,11 @@ class IP(object):
 
 
     def __repr__(self):
-        return "IP(ip={ip}, network_prefix={network_prefix}, nice_name={nice_name})".format(
+        return "IP(ip={ip}, network_prefix={network_prefix}, nice_name={nice_name}, gateways={gateways})".format(
             ip = repr(self.ip),
             network_prefix = repr(self.network_prefix),
-            nice_name = repr(self.nice_name)
+            nice_name = repr(self.nice_name),
+            gateways = repr(self.gateways)
         )
 
 
