@@ -29,7 +29,7 @@ else:
 
 setup(
     name = 'ifaddr',
-    version = '0.1.6',
+    version = '0.1.7',
     description='Cross-platform network interface and IP address enumeration library',
     long_description=long_description,
     author='Stefan C. Mueller',

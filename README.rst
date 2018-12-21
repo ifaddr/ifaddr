@@ -12,7 +12,7 @@ ifaddr - Enumerate network interfaces/adapters and their IP addresses
 .. image:: https://codecov.io/gh/pydron/ifaddr/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/pydron/ifaddr
 
-`ifaddr` is a small Python library that allows you to find all the
+`ifaddr` is a small Python library that allows you to find all the Ethernet and
 IP addresses of the computer. It is tested on **Linux**, **OS X**, and
 **Windows**. Other BSD derivatives like **OpenBSD**, **FreeBSD**, and
 **NetBSD** should work too, but I haven't personally tested those.
@@ -58,6 +58,26 @@ This will print:
 	
 You get both IPv4 and IPv6 addresses. The later complete with
 flowinfo and scope_id.
+
+If you wish to include network interfaces that do not have a configured IP
+addresss, pass the `include_unconfigured` parameter to `get_adapters()`.
+Adapters with no configured IP addresses will have an zero-length `ips`
+property.  For example:
+
+.. code-block:: python
+
+    import ifaddr
+
+    adapters = ifaddr.get_adapters(include_unconfigured=True)
+
+    for adapter in adapters:
+        print "IPs of network adapter " + adapter.nice_name
+        if adapter.ips:
+            for ip in adapter.ips:
+                print "   %s/%s" % (ip.ip, ip.network_prefix)
+        else:
+            print "  No IPs configured"
+
 
 -------------
 Documentation
