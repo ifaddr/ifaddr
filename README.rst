@@ -1,5 +1,3 @@
-
-
 ifaddr - Enumerate IP addresses on the local network adapters
 =============================================================
 
@@ -19,15 +17,15 @@ Let's get going!
 
 .. code-block:: python
 
-   import ifaddr
-   
-   adapters = ifaddr.get_adapters()
-   
-   for adapter in adapters:
-       print "IPs of network adapter " + adapter.nice_name
-       for ip in adapter.ips:
-           print "   %s/%s" % (ip.ip, ip.network_prefix)
-   
+    import ifaddr
+
+    adapters = ifaddr.get_adapters()
+
+    for adapter in adapters:
+        print ("IPs of network adapter " + adapter.nice_name)
+        for ip in adapter.ips:
+            print ("   %s/%s" % (ip.ip, ip.network_prefix))
+
 This will print:
 
 .. code-block:: python
@@ -44,12 +42,12 @@ This will print:
 	IPs of network adapter Software Loopback Interface 1
 	   IP ('::1', 0L, 0L)/128
 	   IP 127.0.0.1/8
-	   
+
 You get both IPv4 and IPv6 addresses. The later complete with
 flowinfo and scope_id.
 
 -------------
-Documentation 
+Documentation
 -------------
 
 The complete documentation (there isn't much to document) can be found here:
@@ -60,14 +58,11 @@ Bug Reports and other contributions
 -----------------------------------
 
 This project is hosted here `ifaddr github page <https://github.com/smurn/ifaddr>`_.
- 
+
 ------------
 Alternatives
 ------------
 
-Alastair Houghton develops `netifaces  <https://pypi.python.org/pypi/netifaces>`_ 
+Alastair Houghton develops `netifaces  <https://pypi.python.org/pypi/netifaces>`_
 which can do  everything this library can, and more. The only drawback is that it needs
 to be compiled, which can make the installation difficult.
-
-
-
