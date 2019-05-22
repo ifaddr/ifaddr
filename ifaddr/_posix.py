@@ -24,6 +24,7 @@ import os
 import ctypes.util
 import ipaddress
 import collections
+import socket
 
 import ifaddr._shared as shared
 #from ifaddr._shared import sockaddr, Interface, sockaddr_to_ip, ipv6_prefixlength
@@ -50,7 +51,12 @@ def get_adapters():
     
     def add_ip(adapter_name, ip):
         if not adapter_name in ips:
-            ips[adapter_name] = shared.Adapter(adapter_name, adapter_name, [])
+            try:
+                index = socket.if_nametoindex(adapter_name)
+            except (OSError, AttributeError):
+                index = None
+            ips[adapter_name] = shared.Adapter(adapter_name, adapter_name, [],
+                                               index=index)
         ips[adapter_name].ips.append(ip)
     
     

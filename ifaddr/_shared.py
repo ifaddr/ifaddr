@@ -35,7 +35,7 @@ class Adapter(object):
     a IPv4 and an IPv6 IP address.
     """
     
-    def __init__(self, name, nice_name, ips):
+    def __init__(self, name, nice_name, ips, index=None):
         
         #: Unique name that identifies the adapter in the system.
         #: On Linux this is of the form of `eth0` or `eth0:1`, on
@@ -51,12 +51,16 @@ class Adapter(object):
         #: List of :class:`ifaddr.IP` instances in the order they were
         #: reported by the system.
         self.ips = ips
+
+        #: Adapter index as used by some API (e.g. IPv6 multicast group join).
+        self.index = index
         
     def __repr__(self):
-        return "Adapter(name={name}, nice_name={nice_name}, ips={ips})".format(
+        return "Adapter(name={name}, nice_name={nice_name}, ips={ips}, index={index})".format(
            name = repr(self.name),
            nice_name = repr(self.nice_name),
-           ips = repr(self.ips)
+           ips = repr(self.ips),
+           index=repr(self.index)
         )
 
 

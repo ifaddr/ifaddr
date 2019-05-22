@@ -120,10 +120,12 @@ def get_adapters():
         
         name = adapter_info.AdapterName
         nice_name = adapter_info.Description
+        index = adapter_info.IfIndex
         
         if adapter_info.FirstUnicastAddress:
             ips = enumerate_interfaces_of_adapter(adapter_info.FriendlyName, adapter_info.FirstUnicastAddress[0])
             ips = list(ips)
-            result.append(shared.Adapter(name, nice_name, ips))
+            result.append(shared.Adapter(name, nice_name, ips,
+                                         index=index))
 
     return result
