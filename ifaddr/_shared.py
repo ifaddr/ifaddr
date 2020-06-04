@@ -6,15 +6,15 @@
 # rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
 # sell copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
@@ -28,21 +28,21 @@ class Adapter(object):
     """
     Represents a network interface device controller (NIC), such as a
     network card. An adapter can have multiple IPs.
-    
+
     On Linux aliasing (multiple IPs per physical NIC) is implemented
     by creating 'virtual' adapters, each represented by an instance
     of this class. Each of those 'virtual' adapters can have both
     a IPv4 and an IPv6 IP address.
     """
-    
+
     def __init__(self, name, nice_name, ips, index=None):
-        
+
         #: Unique name that identifies the adapter in the system.
         #: On Linux this is of the form of `eth0` or `eth0:1`, on
         #: Windows it is a UUID in string representation, such as
         #: `{846EE342-7039-11DE-9D20-806E6F6E6963}`.
         self.name = name
-        
+
         #: Human readable name of the adpater. On Linux this
         #: is currently the same as :attr:`name`. On Windows
         #: this is the name of the device.
@@ -54,7 +54,7 @@ class Adapter(object):
 
         #: Adapter index as used by some API (e.g. IPv6 multicast group join).
         self.index = index
-        
+
     def __repr__(self):
         return "Adapter(name={name}, nice_name={nice_name}, ips={ips}, index={index})".format(
            name = repr(self.name),
@@ -68,27 +68,27 @@ class IP(object):
     """
     Represents an IP address of an adapter.
     """
-    
+
     def __init__(self, ip, network_prefix, nice_name):
-        
+
         #: IP address. For IPv4 addresses this is a string in
         #: "xxx.xxx.xxx.xxx" format. For IPv6 addresses this
         #: is a three-tuple `(ip, flowinfo, scope_id)`, where
         #: `ip` is a string in the usual collon separated
         #: hex format.
         self.ip = ip
-        
+
         #: Number of bits of the IP that represent the
         #: network. For a `255.255.255.0` netmask, this
         #: number would be `24`.
         self.network_prefix = network_prefix
-        
-        #: Human readable name for this IP. 
+
+        #: Human readable name for this IP.
         #: On Linux is this currently the same as the adapter name.
         #: On Windows this is the name of the network connection
         #: as configured in the system control panel.
         self.nice_name = nice_name
-        
+
     @property
     def is_IPv4(self):
         """
@@ -104,35 +104,35 @@ class IP(object):
         if it is an IPv4 address.
         """
         return isinstance(self.ip, tuple)
-    
-    
+
+
     def __repr__(self):
         return "IP(ip={ip}, network_prefix={network_prefix}, nice_name={nice_name})".format(
             ip = repr(self.ip),
             network_prefix = repr(self.network_prefix),
-            nice_name = repr(self.nice_name)                                                                          
+            nice_name = repr(self.nice_name)
         )
-        
+
 
 if platform.system() == "Darwin" or "BSD" in platform.system():
-    
+
     # BSD derived systems use marginally different structures
     # than either Linux or Windows.
     # I still keep it in `shared` since we can use
     # both structures equally.
-    
+
     class sockaddr(ctypes.Structure):
         _fields_= [('sa_len', ctypes.c_uint8),
                    ('sa_familiy', ctypes.c_uint8),
                    ('sa_data', ctypes.c_uint8 * 14)]
-    
+
     class sockaddr_in(ctypes.Structure):
         _fields_= [('sa_len', ctypes.c_uint8),
                    ('sa_familiy', ctypes.c_uint8),
                    ('sin_port', ctypes.c_uint16),
                    ('sin_addr', ctypes.c_uint8 * 4),
                    ('sin_zero', ctypes.c_uint8 * 8)]
-        
+
     class sockaddr_in6(ctypes.Structure):
         _fields_= [('sa_len', ctypes.c_uint8),
                    ('sa_familiy', ctypes.c_uint8),
@@ -146,21 +146,21 @@ else:
     class sockaddr(ctypes.Structure):
         _fields_= [('sa_familiy', ctypes.c_uint16),
                    ('sa_data', ctypes.c_uint8 * 14)]
-    
+
     class sockaddr_in(ctypes.Structure):
         _fields_= [('sin_familiy', ctypes.c_uint16),
                    ('sin_port', ctypes.c_uint16),
                    ('sin_addr', ctypes.c_uint8 * 4),
                    ('sin_zero', ctypes.c_uint8 * 8)]
-        
+
     class sockaddr_in6(ctypes.Structure):
         _fields_= [('sin6_familiy', ctypes.c_uint16),
                    ('sin6_port', ctypes.c_uint16),
                    ('sin6_flowinfo', ctypes.c_uint32),
                    ('sin6_addr', ctypes.c_uint8 * 16),
                    ('sin6_scope_id', ctypes.c_uint32)]
-    
-    
+
+
 def sockaddr_to_ip(sockaddr_ptr):
     if sockaddr_ptr:
         if sockaddr_ptr[0].sa_familiy == socket.AF_INET:

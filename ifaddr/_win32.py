@@ -6,15 +6,15 @@
 # rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
 # sell copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
@@ -32,11 +32,11 @@ MAX_ADAPTER_ADDRESS_LENGTH = 8
 AF_UNSPEC = 0
 
 
-    
+
 class SOCKET_ADDRESS(ctypes.Structure):
     _fields_ = [('lpSockaddr', ctypes.POINTER(shared.sockaddr)),
                ('iSockaddrLength', wintypes.INT)]
-    
+
 class IP_ADAPTER_UNICAST_ADDRESS(ctypes.Structure):
     pass
 IP_ADAPTER_UNICAST_ADDRESS._fields_ = \
@@ -73,7 +73,7 @@ iphlpapi = ctypes.windll.LoadLibrary("Iphlpapi")
 
 
 def enumerate_interfaces_of_adapter(nice_name, address):
-    
+
     # Iterate through linked list and fill list
     addresses = []
     while True:
@@ -81,15 +81,15 @@ def enumerate_interfaces_of_adapter(nice_name, address):
         if not address.Next:
             break
         address = address.Next[0]
-        
+
     for address in addresses:
         ip = shared.sockaddr_to_ip(address.Address.lpSockaddr)
         network_prefix = address.OnLinkPrefixLength
         yield shared.IP(ip, network_prefix, nice_name)
-    
-    
+
+
 def get_adapters():
-    
+
     # Call GetAdaptersAddresses() with error and buffer size handling
 
     addressbuffersize = wintypes.ULONG(15*1024)
@@ -103,7 +103,7 @@ def get_adapters():
                                       ctypes.byref(addressbuffersize))
     if retval != NO_ERROR:
         raise ctypes.WinError()
-    
+
     # Iterate through adapters fill array
     address_infos = []
     address_info = IP_ADAPTER_ADDRESSES.from_buffer(addressbuffer)
@@ -112,16 +112,16 @@ def get_adapters():
         if not address_info.Next:
             break
         address_info = address_info.Next[0]
-    
-    
+
+
     # Iterate through unicast addresses
     result = []
     for adapter_info in address_infos:
-        
+
         name = adapter_info.AdapterName
         nice_name = adapter_info.Description
         index = adapter_info.IfIndex
-        
+
         if adapter_info.FirstUnicastAddress:
             ips = enumerate_interfaces_of_adapter(adapter_info.FriendlyName, adapter_info.FirstUnicastAddress[0])
             ips = list(ips)
