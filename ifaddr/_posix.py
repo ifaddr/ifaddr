@@ -37,7 +37,7 @@ ifaddrs._fields_ = [('ifa_next', ctypes.POINTER(ifaddrs)),
                     ('ifa_addr', ctypes.POINTER(shared.sockaddr)),
                     ('ifa_netmask', ctypes.POINTER(shared.sockaddr))]
 
-libc = ctypes.CDLL(ctypes.util.find_library("c"), use_errno=True)
+libc = ctypes.CDLL(ctypes.util.find_library("socket" if os.uname()[0] == "SunOS" else "c"), use_errno=True)
 
 def get_adapters():
 
