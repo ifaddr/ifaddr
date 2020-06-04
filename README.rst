@@ -13,6 +13,7 @@ ifaddr - Enumerate IP addresses on the local network adapters
 IP addresses of the computer. It is tested on **Linux**, **OS X**, and
 **Windows**. Other BSD derivatives like **OpenBSD**, **FreeBSD**, and
 **NetBSD** should work too, but I haven't personally tested those.
+**Solaris/Illumos** should also work.
 
 This library is open source and released under the MIT License.
 
