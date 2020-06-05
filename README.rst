@@ -18,7 +18,8 @@ IP addresses of the computer. It is tested on **Linux**, **OS X**, and
 **NetBSD** should work too, but I haven't personally tested those.
 **Solaris/Illumos** should also work.
 
-This library is open source and released under the MIT License.
+This library is open source and released under the MIT License. It works
+with Python 2.7 and 3.5+.
 
 You can install it with `pip install ifaddr`. It doesn't need to
 compile anything, so there shouldn't be any surprises. Even on Windows.
