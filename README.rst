@@ -9,6 +9,8 @@ ifaddr - Enumerate IP addresses on the local network adapters
 .. image:: https://img.shields.io/pypi/v/ifaddr.svg
     :target: https://pypi.python.org/pypi/ifaddr
 
+.. image:: https://codecov.io/gh/pydron/ifaddr/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/pydron/ifaddr
 
 `ifaddr` is a small Python library that allows you to find all the
 IP addresses of the computer. It is tested on **Linux**, **OS X**, and
