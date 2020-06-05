@@ -18,7 +18,6 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-import sys
 import os.path
 from setuptools import setup, find_packages
 
@@ -37,5 +36,5 @@ setup(
     author_email='scm@smurn.org',
     url='https://github.com/pydron/ifaddr',
     packages = find_packages(),
-    install_requires = ['ipaddress'] if sys.version_info[:2] < (3, 3) else [],
+    install_requires = ['ipaddress;python_version<"3.3"'],
 )
