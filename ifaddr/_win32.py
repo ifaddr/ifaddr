@@ -88,7 +88,7 @@ def enumerate_interfaces_of_adapter(nice_name, address):
         yield shared.IP(ip, network_prefix, nice_name)
 
 
-def get_adapters():
+def get_adapters(include_unconfigured=False):
 
     # Call GetAdaptersAddresses() with error and buffer size handling
 
@@ -126,6 +126,9 @@ def get_adapters():
             ips = enumerate_interfaces_of_adapter(adapter_info.FriendlyName, adapter_info.FirstUnicastAddress[0])
             ips = list(ips)
             result.append(shared.Adapter(name, nice_name, ips,
+                                         index=index))
+        elif include_unconfigured:
+            result.append(shared.Adapter(name, nice_name, [],
                                          index=index))
 
     return result
