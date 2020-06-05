@@ -1,7 +1,7 @@
 
 
-ifaddr - Enumerate IP addresses on the local network adapters
-=============================================================
+ifaddr - Enumerate network interfaces/adapters and their IP addresses
+=====================================================================
 
 .. image:: https://github.com/pydron/ifaddr/workflows/CI/badge.svg
     :target: https://github.com/pydron/ifaddr/actions?query=workflow%3ACI+branch%3Amaster
