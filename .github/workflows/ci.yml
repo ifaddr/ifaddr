@@ -22,7 +22,7 @@ jobs:
     - name: Run tests
       run: |
         pytest
-    - name: Report coverage to Coveralls
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+    # Coveralls won't work here trivially because it can't ingest coverage.xml, so Codecov it is.
+    # https://github.com/coverallsapp/github-action/issues/30
+    - name: Report coverage to Codecov
+      uses: codecov/codecov-action@v1
