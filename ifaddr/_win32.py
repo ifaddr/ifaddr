@@ -20,6 +20,7 @@
 
 
 import ctypes
+import sys
 from ctypes import wintypes
 
 import ifaddr._shared as shared
@@ -119,6 +120,9 @@ def get_adapters(include_unconfigured=False):
     for adapter_info in address_infos:
 
         name = adapter_info.AdapterName
+        if sys.version_info[0] > 2:
+            # We don't expect non-ascii characters here, so encoding shouldn't matter
+            name = name.decode()
         nice_name = adapter_info.Description
         index = adapter_info.IfIndex
 
