@@ -18,7 +18,6 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-import sys
 import os.path
 from setuptools import setup, find_packages
 
@@ -30,12 +29,27 @@ else:
 
 setup(
     name = 'ifaddr',
-    version = '0.1.6',
-    description='Enumerates all IP addresses on all network adapters of the system.',
+    version = '0.1.7',
+    description='Cross-platform network interface and IP address enumeration library',
     long_description=long_description,
     author='Stefan C. Mueller',
     author_email='scm@smurn.org',
     url='https://github.com/pydron/ifaddr',
     packages = find_packages(),
-    install_requires = ['ipaddress'] if sys.version_info[:2] < (3, 3) else [],
+    license='MIT',
+    install_requires = ['ipaddress;python_version<"3.3"'],
+    classifiers=[
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
+        'Topic :: System :: Networking',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+    ],
+    keywords=['network interfaces', 'network adapters', 'network addresses', 'IP addresses'],
 )
