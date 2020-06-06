@@ -62,6 +62,19 @@ This will print::
 You get both IPv4 and IPv6 addresses. The later complete with
 flowinfo and scope_id.
 
+---------
+Changelog
+---------
+
+0.1.7
+-----
+
+* Fixed Python 3 compatibility in the examples, thanks to Tristan Stenner and Josef Schlehofer
+* Exposed network interface indexes in Adapter.index, thanks to Dmitry Tantsur
+* Added the license file to distributions on PyPI, thanks to Tomáš Chvátal
+* Fixed Illumos/Solaris compatibility based on a patch proposed by Jorge Schrauwen
+* Set up universal wheels, ifaddr will have both source and wheel distributions on PyPI from now on
+
 ------------
 Alternatives
 ------------
