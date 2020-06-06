@@ -39,7 +39,7 @@ ifaddrs._fields_ = [('ifa_next', ctypes.POINTER(ifaddrs)),
 
 libc = ctypes.CDLL(ctypes.util.find_library("socket" if os.uname()[0] == "SunOS" else "c"), use_errno=True)
 
-def get_adapters():
+def get_adapters(include_unconfigured=False):
 
     addr0 = addr = ctypes.POINTER(ifaddrs)()
     retval = libc.getifaddrs(ctypes.byref(addr))
@@ -57,7 +57,8 @@ def get_adapters():
                 index = None
             ips[adapter_name] = shared.Adapter(adapter_name, adapter_name, [],
                                                index=index)
-        ips[adapter_name].ips.append(ip)
+        if ip is not None:
+            ips[adapter_name].ips.append(ip)
 
 
     while addr:
@@ -84,6 +85,9 @@ def get_adapters():
                 prefixlen = ipaddress.IPv4Network(netmaskStr).prefixlen
             ip = shared.IP(ip, prefixlen, name)
             add_ip(name, ip)
+        else:
+            if include_unconfigured:
+                add_ip(name, None)
         addr = addr[0].ifa_next
 
     libc.freeifaddrs(addr0)
