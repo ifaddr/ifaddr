@@ -118,8 +118,8 @@ def get_adapters(include_unconfigured=False):
     result = []
     for adapter_info in address_infos:
 
-        name = adapter_info.AdapterName
-        nice_name = adapter_info.Description
+        name = adapter_info.AdapterName.decode('utf-8')
+        nice_name = adapter_info.Description.decode('utf-8')
         index = adapter_info.IfIndex
 
         if adapter_info.FirstUnicastAddress:
