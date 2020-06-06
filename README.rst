@@ -1,11 +1,9 @@
-
-
 ifaddr - Enumerate network interfaces/adapters and their IP addresses
 =====================================================================
 
 .. image:: https://github.com/pydron/ifaddr/workflows/CI/badge.svg
     :target: https://github.com/pydron/ifaddr/actions?query=workflow%3ACI+branch%3Amaster
-    
+
 .. image:: https://img.shields.io/pypi/v/ifaddr.svg
     :target: https://pypi.python.org/pypi/ifaddr
 
@@ -30,32 +28,30 @@ Let's get going!
 
 .. code-block:: python
 
-   import ifaddr
+    import ifaddr
 
-   adapters = ifaddr.get_adapters()
+    adapters = ifaddr.get_adapters()
 
-   for adapter in adapters:
-       print("IPs of network adapter " + adapter.nice_name)
-       for ip in adapter.ips:
-           print("   %s/%s" % (ip.ip, ip.network_prefix))
+    for adapter in adapters:
+        print("IPs of network adapter " + adapter.nice_name)
+        for ip in adapter.ips:
+            print("   %s/%s" % (ip.ip, ip.network_prefix))
 
-This will print:
+This will print::
 
-.. code-block:: python
+    IPs of network adapter H5321 gw Mobile Broadband Driver
+       IP ('fe80::9:ebdf:30ab:39a3', 0L, 17L)/64
+       IP 169.254.57.163/16
+    IPs of network adapter Intel(R) Centrino(R) Advanced-N 6205
+       IP ('fe80::481f:3c9d:c3f6:93f8', 0L, 12L)/64
+       IP 192.168.0.51/24
+    IPs of network adapter Intel(R) 82579LM Gigabit Network Connection
+       IP ('fe80::85cd:e07e:4f7a:6aa6', 0L, 11L)/64
+       IP 192.168.0.53/24
+    IPs of network adapter Software Loopback Interface 1
+       IP ('::1', 0L, 0L)/128
+       IP 127.0.0.1/8
 
-	IPs of network adapter H5321 gw Mobile Broadband Driver
-	   IP ('fe80::9:ebdf:30ab:39a3', 0L, 17L)/64
-	   IP 169.254.57.163/16
-	IPs of network adapter Intel(R) Centrino(R) Advanced-N 6205
-	   IP ('fe80::481f:3c9d:c3f6:93f8', 0L, 12L)/64
-	   IP 192.168.0.51/24
-	IPs of network adapter Intel(R) 82579LM Gigabit Network Connection
-	   IP ('fe80::85cd:e07e:4f7a:6aa6', 0L, 11L)/64
-	   IP 192.168.0.53/24
-	IPs of network adapter Software Loopback Interface 1
-	   IP ('::1', 0L, 0L)/128
-	   IP 127.0.0.1/8
-	
 You get both IPv4 and IPv6 addresses. The later complete with
 flowinfo and scope_id.
 
@@ -79,6 +75,3 @@ Alternatives
 Alastair Houghton develops `netifaces  <https://pypi.python.org/pypi/netifaces>`_
 which can do  everything this library can, and more. The only drawback is that it needs
 to be compiled, which can make the installation difficult.
-
-
-
