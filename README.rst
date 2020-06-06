@@ -22,6 +22,13 @@ with Python 2.7 and 3.5+.
 You can install it with `pip install ifaddr`. It doesn't need to
 compile anything, so there shouldn't be any surprises. Even on Windows.
 
+Project links:
+
+* `ifaddr GitHub page <https://github.com/smurn/ifaddr>`_
+* `ifaddr documentation (although there isn't much to document) <http://pythonhosted.org/ifaddr/>`_
+* `ifaddr on PyPI <https://pypi.org/project/ifaddr/>`_
+
+
 ----------------------
 Let's get going!
 ----------------------
@@ -54,19 +61,6 @@ This will print::
 
 You get both IPv4 and IPv6 addresses. The later complete with
 flowinfo and scope_id.
-
--------------
-Documentation
--------------
-
-The complete documentation (there isn't much to document) can be found here:
-`ifaddr Documentation  <http://pythonhosted.org/ifaddr/>`_.
-
------------------------------------
-Bug Reports and other contributions
------------------------------------
-
-This project is hosted here `ifaddr github page <https://github.com/smurn/ifaddr>`_.
 
 ------------
 Alternatives
