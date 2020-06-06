@@ -38,12 +38,12 @@ address_families = {globals()[name]: name for name in dir() if name.startswith('
 
 
 def interfaces():
-    adapters = ifaddr.get_adapters()
+    adapters = ifaddr.get_adapters(include_unconfigured=True)
     return [a.name for a in adapters]
 
 
 def ifaddresses(interface):
-    adapters_by_name = {a.name: a for a in ifaddr.get_adapters()}
+    adapters_by_name = {a.name: a for a in ifaddr.get_adapters(include_unconfigured=True)}
     adapter = adapters_by_name[interface]
     addresses = {}
     for ip in adapter.ips:
