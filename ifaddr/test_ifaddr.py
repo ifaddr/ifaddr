@@ -2,7 +2,7 @@
 
 import unittest
 
-import pytest.mark
+import pytest
 
 import ifaddr
 import ifaddr.netifaces
