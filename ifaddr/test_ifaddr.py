@@ -1,9 +1,19 @@
 # Copyright (C) 2015 Stefan C. Mueller
 
-import netifaces
 import unittest
+
+import pytest.mark
+
 import ifaddr
 import ifaddr.netifaces
+
+
+try:
+    import netifaces
+except ImportError:
+    skip_netifaces = True
+else:
+    skip_netifaces = False
 
 
 class TestIfaddr(unittest.TestCase):
@@ -27,6 +37,7 @@ class TestIfaddr(unittest.TestCase):
         self.assertTrue(found, "No adapter has IP 127.0.0.1: %s" % str(adapters))
 
 
+@pytest.mark.skipif(skip_netifaces, reason='netifaces not installed')
 def test_netifaces_emulation():
     # address_families = ifaddr.netifaces.address_families
     # assert address_families == netifaces.address_families
