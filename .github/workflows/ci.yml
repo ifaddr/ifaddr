@@ -21,8 +21,4 @@ jobs:
         pip install .
     - name: Run tests
       run: |
-        pytest
-    # Coveralls won't work here trivially because it can't ingest coverage.xml, so Codecov it is.
-    # https://github.com/coverallsapp/github-action/issues/30
-    - name: Report coverage to Codecov
-      uses: codecov/codecov-action@v1
+        python test.py
