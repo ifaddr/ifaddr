@@ -35,7 +35,7 @@ class Adapter(object):
     a IPv4 and an IPv6 IP address.
     """
 
-    def __init__(self, name, nice_name, ips, index=None):
+    def __init__(self, name, nice_name, addresses, index=None):
 
         #: Unique name that identifies the adapter in the system.
         #: On Linux this is of the form of `eth0` or `eth0:1`, on
@@ -48,18 +48,24 @@ class Adapter(object):
         #: this is the name of the device.
         self.nice_name = nice_name
 
+        self.addresses = addresses
+
         #: List of :class:`ifaddr.IP` instances in the order they were
         #: reported by the system.
-        self.ips = ips
+        #self.ips = ips
 
         #: Adapter index as used by some API (e.g. IPv6 multicast group join).
         self.index = index
 
+    @property
+    def ips(self):
+        return [address for family, address in self.addresses if family in {socket.AF_INET, socket.AF_INET6}]
+
     def __repr__(self):
-        return "Adapter(name={name}, nice_name={nice_name}, ips={ips}, index={index})".format(
+        return "Adapter(name={name}, nice_name={nice_name}, addresses={addresses}, index={index})".format(
            name = repr(self.name),
            nice_name = repr(self.nice_name),
-           ips = repr(self.ips),
+           addresses=repr(self.addresses),
            index=repr(self.index)
         )
 
@@ -141,6 +147,16 @@ if platform.system() == "Darwin" or "BSD" in platform.system():
                    ('sin6_addr', ctypes.c_uint8 * 16),
                    ('sin6_scope_id', ctypes.c_uint32)]
 
+    class sockaddr_dl(ctypes.Structure):
+        _fields_ = [('sdl_len', ctypes.c_uint8),
+                    ('sdl_family', ctypes.c_uint8),
+                    ('sdl_index', ctypes.c_uint16),
+                    ('sdl_type', ctypes.c_uint8),
+                    ('sdl_nlen', ctypes.c_uint8),
+                    ('sdl_alen', ctypes.c_uint8),
+                    ('sdl_slen', ctypes.c_uint8),
+                    ('sdl_data', ctypes.c_uint8 * 46)]
+
 else:
 
     class sockaddr(ctypes.Structure):
@@ -160,21 +176,36 @@ else:
                    ('sin6_addr', ctypes.c_uint8 * 16),
                    ('sin6_scope_id', ctypes.c_uint32)]
 
+    class sockaddr_dl(ctypes.Structure):
+        _fields_ = [('sdl_family', ctypes.c_uint16),
+                    ('sdl_index', ctypes.c_uint16),
+                    ('sdl_type', ctypes.c_uint8),
+                    ('sdl_nlen', ctypes.c_uint8),
+                    ('sdl_alen', ctypes.c_uint8),
+                    ('sdl_slen', ctypes.c_uint8),
+                    ('sdl_data', ctypes.c_uint8 * 244)]
 
-def sockaddr_to_ip(sockaddr_ptr):
+
+def decode_address(sockaddr_ptr):
     if sockaddr_ptr:
         if sockaddr_ptr[0].sa_familiy == socket.AF_INET:
             ipv4 = ctypes.cast(sockaddr_ptr, ctypes.POINTER(sockaddr_in))
             ippacked = bytes(bytearray(ipv4[0].sin_addr))
             ip = str(ipaddress.ip_address(ippacked))
-            return ip
+            return (socket.AF_INET, ip)
         elif sockaddr_ptr[0].sa_familiy == socket.AF_INET6:
             ipv6 = ctypes.cast(sockaddr_ptr, ctypes.POINTER(sockaddr_in6))
             flowinfo = ipv6[0].sin6_flowinfo
             ippacked = bytes(bytearray(ipv6[0].sin6_addr))
             ip = str(ipaddress.ip_address(ippacked))
             scope_id = ipv6[0].sin6_scope_id
-            return(ip, flowinfo, scope_id)
+            return (socket.AF_INET6, (ip, flowinfo, scope_id))
+        elif sockaddr_ptr[0].sa_familiy == socket.AF_LINK:
+            dl = ctypes.cast(sockaddr_ptr, ctypes.POINTER(sockaddr_dl))[0]
+            if dl.sdl_alen > 0:
+                addr_bytes = dl.sdl_data[dl.sdl_nlen:][:dl.sdl_alen]
+                addr_text = ':'.join('%02x' % (byte,) for byte in addr_bytes)
+                return (socket.AF_LINK, addr_text)
     return None
 
 

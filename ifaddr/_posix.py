@@ -47,29 +47,27 @@ def get_adapters(include_unconfigured=False):
         eno = ctypes.get_errno()
         raise OSError(eno, os.strerror(eno))
 
-    ips = collections.OrderedDict()
+    adapters = collections.OrderedDict()
 
-    def add_ip(adapter_name, ip):
-        if not adapter_name in ips:
+    def add_address(adapter_name, family, address):
+        if not adapter_name in adapters:
             try:
                 index = socket.if_nametoindex(adapter_name)
             except (OSError, AttributeError):
                 index = None
-            ips[adapter_name] = shared.Adapter(adapter_name, adapter_name, [],
-                                               index=index)
-        if ip is not None:
-            ips[adapter_name].ips.append(ip)
-
+            adapters[adapter_name] = shared.Adapter(adapter_name, adapter_name, [],
+                                                    index=index)
+        adapters[adapter_name].addresses.append((family, address))
 
     while addr:
         name = addr[0].ifa_name
         if sys.version_info[0] > 2:
             name = name.decode(encoding='UTF-8')
-        ip = shared.sockaddr_to_ip(addr[0].ifa_addr)
-        if ip:
+        address = shared.decode_address(addr[0].ifa_addr)
+        if address and address[0] in {socket.AF_INET, socket.AF_INET6}:
             if addr[0].ifa_netmask and not addr[0].ifa_netmask[0].sa_familiy:
                 addr[0].ifa_netmask[0].sa_familiy = addr[0].ifa_addr[0].sa_familiy
-            netmask = shared.sockaddr_to_ip(addr[0].ifa_netmask)
+            netmask = shared.decode_address(addr[0].ifa_netmask)[1]
             if isinstance(netmask, tuple):
                 netmask = netmask[0]
                 if sys.version_info[0] > 2:
@@ -83,13 +81,12 @@ def get_adapters(include_unconfigured=False):
                 else:
                     netmaskStr = unicode('0.0.0.0/' + netmask)
                 prefixlen = ipaddress.IPv4Network(netmaskStr).prefixlen
-            ip = shared.IP(ip, prefixlen, name)
-            add_ip(name, ip)
-        else:
-            if include_unconfigured:
-                add_ip(name, None)
+            ip = shared.IP(address[1], prefixlen, name)
+            add_address(name, address[0], ip)
+        elif address and include_unconfigured:
+            add_address(name, address[0], address[1])
         addr = addr[0].ifa_next
 
     libc.freeifaddrs(addr0)
 
-    return ips.values()
+    return adapters.values()
