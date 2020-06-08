@@ -219,11 +219,11 @@ def get_adapters(include_unconfigured=False):
                         ip.gateways += [gateway]
             result.append(
                 shared.Adapter(name, nice_name, ips,
-                               index=index, **additional_info)
+                               index=index, **additional_info, gateways=gateways)
             )
         elif include_unconfigured:
             result.append(shared.Adapter(name, nice_name, [],
-                                         index=index))
+                                         index=index, gateways=gateways))
 
     return result
 

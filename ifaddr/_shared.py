@@ -48,6 +48,7 @@ class Adapter(object):
         wins_enabled=None,
         wins_primary_server=None,
         wins_secondary_server=None,
+        gateways=None,
     ):
 
         #: Unique name that identifies the adapter in the system.
@@ -76,13 +77,15 @@ class Adapter(object):
         self.dhcp_server = dhcp_server
         self.dhcp_lease_obtained = dhcp_lease_obtained
         self.dhcp_lease_expires = dhcp_lease_expires
+        self.gateways = gateways
 
     def __repr__(self):
         return "Adapter(name={name}, nice_name={nice_name}, ips={ips}, index={index})".format(
            name = repr(self.name),
            nice_name = repr(self.nice_name),
            ips = repr(self.ips),
-           index=repr(self.index)
+           index=repr(self.index),
+           gateways=repr(self.gateways),
         )
 
 
