@@ -198,6 +198,9 @@ def get_adapters(include_unconfigured=False):
             ips = enumerate_interfaces_of_adapter(adapter_info.FriendlyName, adapter_info.FirstUnicastAddress[0])
             ips = list(ips)
             additional_info = get_additional_adapter_info(name)
+            print('additional info for %d/%s' % (index, name))
+            import pprint
+            pprint.pprint(additional_info)
             gateways = additional_info.pop('gateways')
 
             for i, ip in enumerate(ips):
