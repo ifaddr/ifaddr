@@ -203,9 +203,9 @@ def get_adapters(include_unconfigured=False):
             for i, ip in enumerate(ips):
                 try:
                     if isinstance(ip.ip, tuple):
-                        ip_network = ipaddress.ip_interface(ip.ip[0].decode('utf-8')).network
+                        ip_network = ipaddress.ip_interface(ip.ip[0]).network
                     else:
-                        ip_network = ipaddress.ip_interface(ip.ip.decode('utf-8')).network
+                        ip_network = ipaddress.ip_interface(ip.ip).network
                 except ipaddress.AddressValueError:
                     continue
 
