@@ -38,7 +38,7 @@ else:
             print('Interfaces:')
             adapters = ifaddr.get_adapters(include_unconfigured=True)
             for adapter in adapters:
-                print('index %d name %s. Gateways:' % (adapter.index, adapter.nice_name))
+                print('index %d name %s. Gateways:' % (adapter.index, adapter.name))
                 for gateway in adapter.gateways:
                     print('* %s' % (gateway,))
                 print('IP-s:')
