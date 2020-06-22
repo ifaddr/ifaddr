@@ -1,2 +1,4 @@
+# netifaces only provides 64-bit Windows wheels for Python 3.6 and 3.7 and we use 64-bit CI builds
+netifaces;python_version=='3.6' and platform_system=='Windows' or python_version=='3.7' and platform_system=='Windows' or platform_system!='Windows'
 pytest
 pytest-cov
