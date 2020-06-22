@@ -39,13 +39,6 @@ class TestIfaddr(unittest.TestCase):
 
 @pytest.mark.skipif(skip_netifaces, reason='netifaces not installed')
 def test_netifaces_compatibility():
-    # TODO: implement this
-    # address_families = ifaddr.netifaces.address_families
-    # assert address_families == netifaces.address_families
-    # for numeric, name in address_families.items():
-    #     print(name, numeric)
-    #     assert getattr(ifaddr.netifaces, name) == numeric
-    #     assert getattr(ifaddr.netifaces, name) == getattr(netifaces, name)
     interfaces = ifaddr.netifaces.interfaces()
     assert interfaces == netifaces.interfaces()
     # TODO: implement those as well
