@@ -1,7 +1,20 @@
 # Copyright (C) 2015 Stefan C. Mueller
 
 import unittest
+
+import pytest
+
 import ifaddr
+import ifaddr.netifaces
+
+
+try:
+    import netifaces
+except ImportError:
+    skip_netifaces = True
+else:
+    skip_netifaces = False
+
 
 class TestIfaddr(unittest.TestCase):
     """
@@ -22,3 +35,14 @@ class TestIfaddr(unittest.TestCase):
                     found = True
 
         self.assertTrue(found, "No adapter has IP 127.0.0.1: %s" % str(adapters))
+
+
+@pytest.mark.skipif(skip_netifaces, reason='netifaces not installed')
+def test_netifaces_compatibility():
+    interfaces = ifaddr.netifaces.interfaces()
+    assert interfaces == netifaces.interfaces()
+    # TODO: implement those as well
+    # for interface in interfaces:
+    #     print(interface)
+    #     assert ifaddr.netifaces.ifaddresses(interface) == netifaces.ifaddresses(interface)
+    # assert ifaddr.netifaces.gateways() == netifaces.gateways()
