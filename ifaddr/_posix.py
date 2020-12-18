@@ -52,7 +52,7 @@ def get_adapters(include_unconfigured=False):
         if not adapter_name in ips:
             try:
                 index = socket.if_nametoindex(adapter_name)
-            except OSError:
+            except (OSError, AttributeError):
                 index = None
             ips[adapter_name] = shared.Adapter(adapter_name, adapter_name, [],
                                                index=index)
