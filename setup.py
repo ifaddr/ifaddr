@@ -37,7 +37,6 @@ setup(
     url='https://github.com/pydron/ifaddr',
     packages = find_packages(),
     license='MIT',
-    install_requires = ['ipaddress;python_version<"3.3"'],
     classifiers=[
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',

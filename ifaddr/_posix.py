@@ -19,7 +19,6 @@
 # IN THE SOFTWARE.
 
 
-import sys
 import os
 import ctypes.util
 import ipaddress
@@ -62,26 +61,17 @@ def get_adapters(include_unconfigured=False):
 
 
     while addr:
-        name = addr[0].ifa_name
-        if sys.version_info[0] > 2:
-            name = name.decode(encoding='UTF-8')
+        name = addr[0].ifa_name.decode(encoding='UTF-8')
         ip = shared.sockaddr_to_ip(addr[0].ifa_addr)
         if ip:
             if addr[0].ifa_netmask and not addr[0].ifa_netmask[0].sa_familiy:
                 addr[0].ifa_netmask[0].sa_familiy = addr[0].ifa_addr[0].sa_familiy
             netmask = shared.sockaddr_to_ip(addr[0].ifa_netmask)
             if isinstance(netmask, tuple):
-                netmask = netmask[0]
-                if sys.version_info[0] > 2:
-                    netmaskStr = str(netmask)
-                else:
-                    netmaskStr = unicode(netmask)
+                netmaskStr = str(netmask[0])
                 prefixlen = shared.ipv6_prefixlength(ipaddress.IPv6Address(netmaskStr))
             else:
-                if sys.version_info[0] > 2:
-                    netmaskStr = str('0.0.0.0/' + netmask)
-                else:
-                    netmaskStr = unicode('0.0.0.0/' + netmask)
+                netmaskStr = str('0.0.0.0/' + netmask)
                 prefixlen = ipaddress.IPv4Network(netmaskStr).prefixlen
             ip = shared.IP(ip, prefixlen, name)
             add_ip(name, ip)
