@@ -25,7 +25,7 @@ import ipaddress
 import collections
 import socket
 
-from typing import Optional
+from typing import Iterable, Optional
 
 import ifaddr._shared as shared
 #from ifaddr._shared import sockaddr, Interface, sockaddr_to_ip, ipv6_prefixlength
@@ -40,7 +40,8 @@ ifaddrs._fields_ = [('ifa_next', ctypes.POINTER(ifaddrs)),
 
 libc = ctypes.CDLL(ctypes.util.find_library("socket" if os.uname()[0] == "SunOS" else "c"), use_errno=True)  # type: ignore
 
-def get_adapters(include_unconfigured: bool = False) -> 'collections._OrderedDictValuesView':
+
+def get_adapters(include_unconfigured: bool = False) -> Iterable[shared.Adapter]:
 
     addr0 = addr = ctypes.POINTER(ifaddrs)()
     retval = libc.getifaddrs(ctypes.byref(addr))
