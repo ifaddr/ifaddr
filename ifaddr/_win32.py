@@ -21,6 +21,7 @@
 
 import ctypes
 from ctypes import wintypes
+from typing import Iterable, List
 
 import ifaddr._shared as shared
 
@@ -60,22 +61,22 @@ IP_ADAPTER_ADDRESSES._fields_ = [('Length', wintypes.ULONG),
                                  ('Next', ctypes.POINTER(IP_ADAPTER_ADDRESSES)),
                                  ('AdapterName', ctypes.c_char_p),
                                  ('FirstUnicastAddress', ctypes.POINTER(IP_ADAPTER_UNICAST_ADDRESS)),
-                                 ('FirstAnycastAddress', ctypes.POINTER(None)),
-                                 ('FirstMulticastAddress', ctypes.POINTER(None)),
-                                 ('FirstDnsServerAddress', ctypes.POINTER(None)),
+                                 ('FirstAnycastAddress', ctypes.c_void_p),
+                                 ('FirstMulticastAddress', ctypes.c_void_p),
+                                 ('FirstDnsServerAddress', ctypes.c_void_p),
                                  ('DnsSuffix', ctypes.c_wchar_p),
                                  ('Description', ctypes.c_wchar_p),
                                  ('FriendlyName', ctypes.c_wchar_p)
                                  ]
 
 
-iphlpapi = ctypes.windll.LoadLibrary("Iphlpapi")
+iphlpapi = ctypes.windll.LoadLibrary("Iphlpapi")  # type: ignore
 
 
-def enumerate_interfaces_of_adapter(nice_name, address):
+def enumerate_interfaces_of_adapter(nice_name: str, address: IP_ADAPTER_UNICAST_ADDRESS) -> Iterable[shared.IP]:
 
     # Iterate through linked list and fill list
-    addresses = []
+    addresses = []  # type: List[IP_ADAPTER_UNICAST_ADDRESS]
     while True:
         addresses.append(address)
         if not address.Next:
@@ -88,7 +89,7 @@ def enumerate_interfaces_of_adapter(nice_name, address):
         yield shared.IP(ip, network_prefix, nice_name)
 
 
-def get_adapters(include_unconfigured=False):
+def get_adapters(include_unconfigured: bool = False) -> List[shared.Adapter]:
 
     # Call GetAdaptersAddresses() with error and buffer size handling
 
@@ -102,10 +103,10 @@ def get_adapters(include_unconfigured=False):
                                       ctypes.byref(addressbuffer),
                                       ctypes.byref(addressbuffersize))
     if retval != NO_ERROR:
-        raise ctypes.WinError()
+        raise ctypes.WinError()  # type: ignore
 
     # Iterate through adapters fill array
-    address_infos = []
+    address_infos = []  # type: List[IP_ADAPTER_ADDRESSES]
     address_info = IP_ADAPTER_ADDRESSES.from_buffer(addressbuffer)
     while True:
         address_infos.append(address_info)
@@ -115,7 +116,7 @@ def get_adapters(include_unconfigured=False):
 
 
     # Iterate through unicast addresses
-    result = []
+    result = []  # type: List[shared.Adapter]
     for adapter_info in address_infos:
 
         # We don't expect non-ascii characters here, so encoding shouldn't matter
