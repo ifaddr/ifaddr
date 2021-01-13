@@ -89,7 +89,7 @@ def enumerate_interfaces_of_adapter(nice_name: str, address: IP_ADAPTER_UNICAST_
         yield shared.IP(ip, network_prefix, nice_name)
 
 
-def get_adapters(include_unconfigured: bool = False) -> List[shared.Adapter]:
+def get_adapters(include_unconfigured: bool = False) -> Iterable[shared.Adapter]:
 
     # Call GetAdaptersAddresses() with error and buffer size handling
 
