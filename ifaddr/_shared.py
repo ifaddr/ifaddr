@@ -24,6 +24,9 @@ import socket
 import ipaddress
 import platform
 
+from typing import List, Optional, Tuple, Union
+
+
 class Adapter(object):
     """
     Represents a network interface device controller (NIC), such as a
@@ -35,7 +38,7 @@ class Adapter(object):
     a IPv4 and an IPv6 IP address.
     """
 
-    def __init__(self, name, nice_name, ips, index=None):
+    def __init__(self, name: str, nice_name: str, ips: List['IP'], index: Optional[int] = None) -> None:
 
         #: Unique name that identifies the adapter in the system.
         #: On Linux this is of the form of `eth0` or `eth0:1`, on
@@ -55,7 +58,7 @@ class Adapter(object):
         #: Adapter index as used by some API (e.g. IPv6 multicast group join).
         self.index = index
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "Adapter(name={name}, nice_name={nice_name}, ips={ips}, index={index})".format(
            name = repr(self.name),
            nice_name = repr(self.nice_name),
@@ -64,12 +67,19 @@ class Adapter(object):
         )
 
 
+# Type of an IPv4 address (a string in "xxx.xxx.xxx.xxx" format)
+_IPv4Address = str
+
+# Type of an IPv6 address (a three-tuple `(ip, flowinfo, scope_id)`)
+_IPv6Address = Tuple[str, int, int]
+
+
 class IP(object):
     """
     Represents an IP address of an adapter.
     """
 
-    def __init__(self, ip, network_prefix, nice_name):
+    def __init__(self, ip: Union[_IPv4Address, _IPv6Address], network_prefix: int, nice_name: str) -> None:
 
         #: IP address. For IPv4 addresses this is a string in
         #: "xxx.xxx.xxx.xxx" format. For IPv6 addresses this
@@ -90,7 +100,7 @@ class IP(object):
         self.nice_name = nice_name
 
     @property
-    def is_IPv4(self):
+    def is_IPv4(self) -> bool:
         """
         Returns `True` if this IP is an IPv4 address and `False`
         if it is an IPv6 address.
@@ -98,7 +108,7 @@ class IP(object):
         return not isinstance(self.ip, tuple)
 
     @property
-    def is_IPv6(self):
+    def is_IPv6(self) -> bool:
         """
         Returns `True` if this IP is an IPv6 address and `False`
         if it is an IPv4 address.
@@ -106,7 +116,7 @@ class IP(object):
         return isinstance(self.ip, tuple)
 
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "IP(ip={ip}, network_prefix={network_prefix}, nice_name={nice_name})".format(
             ip = repr(self.ip),
             network_prefix = repr(self.network_prefix),
@@ -143,17 +153,17 @@ if platform.system() == "Darwin" or "BSD" in platform.system():
 
 else:
 
-    class sockaddr(ctypes.Structure):
+    class sockaddr(ctypes.Structure):  # type: ignore
         _fields_= [('sa_familiy', ctypes.c_uint16),
                    ('sa_data', ctypes.c_uint8 * 14)]
 
-    class sockaddr_in(ctypes.Structure):
+    class sockaddr_in(ctypes.Structure):  # type: ignore
         _fields_= [('sin_familiy', ctypes.c_uint16),
                    ('sin_port', ctypes.c_uint16),
                    ('sin_addr', ctypes.c_uint8 * 4),
                    ('sin_zero', ctypes.c_uint8 * 8)]
 
-    class sockaddr_in6(ctypes.Structure):
+    class sockaddr_in6(ctypes.Structure):  # type: ignore
         _fields_= [('sin6_familiy', ctypes.c_uint16),
                    ('sin6_port', ctypes.c_uint16),
                    ('sin6_flowinfo', ctypes.c_uint32),
@@ -161,7 +171,7 @@ else:
                    ('sin6_scope_id', ctypes.c_uint32)]
 
 
-def sockaddr_to_ip(sockaddr_ptr):
+def sockaddr_to_ip(sockaddr_ptr: 'ctypes.pointer[sockaddr]') -> Optional[Union[_IPv4Address, _IPv6Address]]:
     if sockaddr_ptr:
         if sockaddr_ptr[0].sa_familiy == socket.AF_INET:
             ipv4 = ctypes.cast(sockaddr_ptr, ctypes.POINTER(sockaddr_in))
@@ -178,7 +188,7 @@ def sockaddr_to_ip(sockaddr_ptr):
     return None
 
 
-def ipv6_prefixlength(address):
+def ipv6_prefixlength(address: ipaddress.IPv6Address) -> int:
     prefix_length = 0
     for i in range(address.max_prefixlen):
         if int(address) >> i & 1:

@@ -25,7 +25,7 @@ class TestIfaddr(unittest.TestCase):
     a sanity check for the moment.
     """
 
-    def test_get_adapters_contains_localhost(self):
+    def test_get_adapters_contains_localhost(self) -> None:
 
         found = False
         adapters = ifaddr.get_adapters()
@@ -38,7 +38,7 @@ class TestIfaddr(unittest.TestCase):
 
 
 @pytest.mark.skipif(skip_netifaces, reason='netifaces not installed')
-def test_netifaces_compatibility():
+def test_netifaces_compatibility() -> None:
     interfaces = ifaddr.netifaces.interfaces()
     assert interfaces == netifaces.interfaces()
     # TODO: implement those as well
