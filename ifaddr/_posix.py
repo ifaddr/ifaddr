@@ -61,7 +61,9 @@ def get_adapters(include_unconfigured: bool = False) -> Iterable[shared.Adapter]
         if adapter_name not in ips:
             index = None  # type: Optional[int]
             try:
-                index = socket.if_nametoindex(adapter_name)
+                # Mypy errors on this when the Windows CI runs:
+                #     error: Module has no attribute "if_nametoindex"
+                index = socket.if_nametoindex(adapter_name)  # type: ignore
             except (OSError, AttributeError):
                 pass
             ips[adapter_name] = shared.Adapter(adapter_name, adapter_name, [], index=index)
