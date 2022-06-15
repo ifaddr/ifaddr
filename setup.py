@@ -28,14 +28,14 @@ else:
     long_description = ""
 
 setup(
-    name = 'ifaddr',
-    version = '0.1.7',
+    name='ifaddr',
+    version='0.1.7',
     description='Cross-platform network interface and IP address enumeration library',
     long_description=long_description,
     author='Stefan C. Mueller',
     author_email='scm@smurn.org',
     url='https://github.com/pydron/ifaddr',
-    packages = find_packages(),
+    packages=find_packages(),
     license='MIT',
     classifiers=[
         'Intended Audience :: Developers',
