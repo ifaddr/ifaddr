@@ -36,6 +36,7 @@ setup(
     author_email='scm@smurn.org',
     url='https://github.com/pydron/ifaddr',
     packages=find_packages(),
+    package_data={'ifaddr': ['py.typed']},
     license='MIT',
     classifiers=[
         'Intended Audience :: Developers',
