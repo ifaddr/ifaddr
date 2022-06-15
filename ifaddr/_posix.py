@@ -28,15 +28,21 @@ import socket
 from typing import Iterable, Optional
 
 import ifaddr._shared as shared
-#from ifaddr._shared import sockaddr, Interface, sockaddr_to_ip, ipv6_prefixlength
+
+# from ifaddr._shared import sockaddr, Interface, sockaddr_to_ip, ipv6_prefixlength
+
 
 class ifaddrs(ctypes.Structure):
     pass
-ifaddrs._fields_ = [('ifa_next', ctypes.POINTER(ifaddrs)),
-                    ('ifa_name', ctypes.c_char_p),
-                    ('ifa_flags', ctypes.c_uint),
-                    ('ifa_addr', ctypes.POINTER(shared.sockaddr)),
-                    ('ifa_netmask', ctypes.POINTER(shared.sockaddr))]
+
+
+ifaddrs._fields_ = [
+    ('ifa_next', ctypes.POINTER(ifaddrs)),
+    ('ifa_name', ctypes.c_char_p),
+    ('ifa_flags', ctypes.c_uint),
+    ('ifa_addr', ctypes.POINTER(shared.sockaddr)),
+    ('ifa_netmask', ctypes.POINTER(shared.sockaddr)),
+]
 
 libc = ctypes.CDLL(ctypes.util.find_library("socket" if os.uname()[0] == "SunOS" else "c"), use_errno=True)  # type: ignore
 
@@ -58,11 +64,9 @@ def get_adapters(include_unconfigured: bool = False) -> Iterable[shared.Adapter]
                 index = socket.if_nametoindex(adapter_name)
             except (OSError, AttributeError):
                 pass
-            ips[adapter_name] = shared.Adapter(adapter_name, adapter_name, [],
-                                               index=index)
+            ips[adapter_name] = shared.Adapter(adapter_name, adapter_name, [], index=index)
         if ip is not None:
             ips[adapter_name].ips.append(ip)
-
 
     while addr:
         name = addr[0].ifa_name.decode(encoding='UTF-8')
