@@ -11,9 +11,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        # PyPy3.6 not included on this list because 7.3.4+ is needed due to
-        # https://foss.heptapod.net/pypy/pypy/-/issues/3314 but setup-python doesn't seem to have it
-        python-version: [3.6, 3.7, 3.8, pypy3.7, pypy3.8]
+        python-version: [3.7, 3.8, pypy3.7, pypy3.8]
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
