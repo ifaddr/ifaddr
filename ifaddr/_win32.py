@@ -85,6 +85,7 @@ def enumerate_interfaces_of_adapter(nice_name: str, address: IP_ADAPTER_UNICAST_
 
     for address in addresses:
         ip = shared.sockaddr_to_ip(address.Address.lpSockaddr)
+        assert ip is not None, f'sockaddr_to_ip({address.Address.lpSockaddr}) returned None'
         network_prefix = address.OnLinkPrefixLength
         yield shared.IP(ip, network_prefix, nice_name)
 
