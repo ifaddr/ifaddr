@@ -86,6 +86,19 @@ property.  For example:
 Changelog
 ---------
 
+0.2.0
+-----
+
+* Added an option to include IP-less adapters, thanks to memory
+* Fixed a bug where an interface's name was `bytes`, not `str`, on Windows
+* Added an implementation of `netifaces.interfaces()` (available through
+  `ifaddr.netifaces.interfaces()`)
+* Added type hints
+
+Backwards incompatible/breaking changes:
+
+* Dropped Python 3.6 support
+
 0.1.7
 -----
 
@@ -102,3 +115,6 @@ Alternatives
 Alastair Houghton develops `netifaces  <https://pypi.python.org/pypi/netifaces>`_
 which can do  everything this library can, and more. The only drawback is that it needs
 to be compiled, which can make the installation difficult.
+
+As of ifaddr 0.2.0 we implement the equivalent of `netifaces.interfaces()`. It's available through
+`ifaddr.netifaces.interfaces()`.
