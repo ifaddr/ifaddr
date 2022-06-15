@@ -60,10 +60,7 @@ class Adapter(object):
 
     def __repr__(self) -> str:
         return "Adapter(name={name}, nice_name={nice_name}, ips={ips}, index={index})".format(
-           name = repr(self.name),
-           nice_name = repr(self.nice_name),
-           ips = repr(self.ips),
-           index=repr(self.index)
+            name=repr(self.name), nice_name=repr(self.nice_name), ips=repr(self.ips), index=repr(self.index)
         )
 
 
@@ -115,12 +112,9 @@ class IP(object):
         """
         return isinstance(self.ip, tuple)
 
-
     def __repr__(self) -> str:
         return "IP(ip={ip}, network_prefix={network_prefix}, nice_name={nice_name})".format(
-            ip = repr(self.ip),
-            network_prefix = repr(self.network_prefix),
-            nice_name = repr(self.nice_name)
+            ip=repr(self.ip), network_prefix=repr(self.network_prefix), nice_name=repr(self.nice_name)
         )
 
 
@@ -132,43 +126,52 @@ if platform.system() == "Darwin" or "BSD" in platform.system():
     # both structures equally.
 
     class sockaddr(ctypes.Structure):
-        _fields_= [('sa_len', ctypes.c_uint8),
-                   ('sa_familiy', ctypes.c_uint8),
-                   ('sa_data', ctypes.c_uint8 * 14)]
+        _fields_ = [
+            ('sa_len', ctypes.c_uint8),
+            ('sa_familiy', ctypes.c_uint8),
+            ('sa_data', ctypes.c_uint8 * 14),
+        ]
 
     class sockaddr_in(ctypes.Structure):
-        _fields_= [('sa_len', ctypes.c_uint8),
-                   ('sa_familiy', ctypes.c_uint8),
-                   ('sin_port', ctypes.c_uint16),
-                   ('sin_addr', ctypes.c_uint8 * 4),
-                   ('sin_zero', ctypes.c_uint8 * 8)]
+        _fields_ = [
+            ('sa_len', ctypes.c_uint8),
+            ('sa_familiy', ctypes.c_uint8),
+            ('sin_port', ctypes.c_uint16),
+            ('sin_addr', ctypes.c_uint8 * 4),
+            ('sin_zero', ctypes.c_uint8 * 8),
+        ]
 
     class sockaddr_in6(ctypes.Structure):
-        _fields_= [('sa_len', ctypes.c_uint8),
-                   ('sa_familiy', ctypes.c_uint8),
-                   ('sin6_port', ctypes.c_uint16),
-                   ('sin6_flowinfo', ctypes.c_uint32),
-                   ('sin6_addr', ctypes.c_uint8 * 16),
-                   ('sin6_scope_id', ctypes.c_uint32)]
+        _fields_ = [
+            ('sa_len', ctypes.c_uint8),
+            ('sa_familiy', ctypes.c_uint8),
+            ('sin6_port', ctypes.c_uint16),
+            ('sin6_flowinfo', ctypes.c_uint32),
+            ('sin6_addr', ctypes.c_uint8 * 16),
+            ('sin6_scope_id', ctypes.c_uint32),
+        ]
 
 else:
 
     class sockaddr(ctypes.Structure):  # type: ignore
-        _fields_= [('sa_familiy', ctypes.c_uint16),
-                   ('sa_data', ctypes.c_uint8 * 14)]
+        _fields_ = [('sa_familiy', ctypes.c_uint16), ('sa_data', ctypes.c_uint8 * 14)]
 
     class sockaddr_in(ctypes.Structure):  # type: ignore
-        _fields_= [('sin_familiy', ctypes.c_uint16),
-                   ('sin_port', ctypes.c_uint16),
-                   ('sin_addr', ctypes.c_uint8 * 4),
-                   ('sin_zero', ctypes.c_uint8 * 8)]
+        _fields_ = [
+            ('sin_familiy', ctypes.c_uint16),
+            ('sin_port', ctypes.c_uint16),
+            ('sin_addr', ctypes.c_uint8 * 4),
+            ('sin_zero', ctypes.c_uint8 * 8),
+        ]
 
     class sockaddr_in6(ctypes.Structure):  # type: ignore
-        _fields_= [('sin6_familiy', ctypes.c_uint16),
-                   ('sin6_port', ctypes.c_uint16),
-                   ('sin6_flowinfo', ctypes.c_uint32),
-                   ('sin6_addr', ctypes.c_uint8 * 16),
-                   ('sin6_scope_id', ctypes.c_uint32)]
+        _fields_ = [
+            ('sin6_familiy', ctypes.c_uint16),
+            ('sin6_port', ctypes.c_uint16),
+            ('sin6_flowinfo', ctypes.c_uint32),
+            ('sin6_addr', ctypes.c_uint8 * 16),
+            ('sin6_scope_id', ctypes.c_uint32),
+        ]
 
 
 def sockaddr_to_ip(sockaddr_ptr: 'ctypes.pointer[sockaddr]') -> Optional[Union[_IPv4Address, _IPv6Address]]:
@@ -184,7 +187,7 @@ def sockaddr_to_ip(sockaddr_ptr: 'ctypes.pointer[sockaddr]') -> Optional[Union[_
             ippacked = bytes(bytearray(ipv6[0].sin6_addr))
             ip = str(ipaddress.ip_address(ippacked))
             scope_id = ipv6[0].sin6_scope_id
-            return(ip, flowinfo, scope_id)
+            return (ip, flowinfo, scope_id)
     return None
 
 
