@@ -65,8 +65,9 @@ class Adapter(object):
         self.multicast = multicast
 
     def __repr__(self) -> str:
-        return "Adapter(name={name}, nice_name={nice_name}, ips={ips}, index={index})".format(
-            name=repr(self.name), nice_name=repr(self.nice_name), ips=repr(self.ips), index=repr(self.index)
+        return "Adapter(name={name}, nice_name={nice_name}, ips={ips}, index={index}, multicast={multicast})".format(
+            name=repr(self.name), nice_name=repr(self.nice_name), ips=repr(self.ips), index=repr(self.index),
+            multicast=repr(self.multicast)
         )
 
 
