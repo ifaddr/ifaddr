@@ -39,7 +39,6 @@ class Adapter(object):
     """
 
     def __init__(self, name: str, nice_name: str, ips: List['IP'], index: Optional[int] = None) -> None:
-
         #: Unique name that identifies the adapter in the system.
         #: On Linux this is of the form of `eth0` or `eth0:1`, on
         #: Windows it is a UUID in string representation, such as
@@ -77,7 +76,6 @@ class IP(object):
     """
 
     def __init__(self, ip: Union[_IPv4Address, _IPv6Address], network_prefix: int, nice_name: str) -> None:
-
         #: IP address. For IPv4 addresses this is a string in
         #: "xxx.xxx.xxx.xxx" format. For IPv6 addresses this
         #: is a three-tuple `(ip, flowinfo, scope_id)`, where
@@ -119,7 +117,6 @@ class IP(object):
 
 
 if platform.system() == "Darwin" or "BSD" in platform.system():
-
     # BSD derived systems use marginally different structures
     # than either Linux or Windows.
     # I still keep it in `shared` since we can use

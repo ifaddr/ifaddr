@@ -48,7 +48,6 @@ libc = ctypes.CDLL(ctypes.util.find_library("socket" if os.uname()[0] == "SunOS"
 
 
 def get_adapters(include_unconfigured: bool = False) -> Iterable[shared.Adapter]:
-
     addr0 = addr = ctypes.POINTER(ifaddrs)()
     retval = libc.getifaddrs(ctypes.byref(addr))
     if retval != 0:

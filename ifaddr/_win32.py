@@ -81,7 +81,6 @@ iphlpapi = ctypes.windll.LoadLibrary("Iphlpapi")  # type: ignore
 def enumerate_interfaces_of_adapter(
     nice_name: str, address: IP_ADAPTER_UNICAST_ADDRESS
 ) -> Iterable[shared.IP]:
-
     # Iterate through linked list and fill list
     addresses = []  # type: List[IP_ADAPTER_UNICAST_ADDRESS]
     while True:
@@ -98,7 +97,6 @@ def enumerate_interfaces_of_adapter(
 
 
 def get_adapters(include_unconfigured: bool = False) -> Iterable[shared.Adapter]:
-
     # Call GetAdaptersAddresses() with error and buffer size handling
 
     addressbuffersize = wintypes.ULONG(15 * 1024)
@@ -127,7 +125,6 @@ def get_adapters(include_unconfigured: bool = False) -> Iterable[shared.Adapter]
     # Iterate through unicast addresses
     result = []  # type: List[shared.Adapter]
     for adapter_info in address_infos:
-
         # We don't expect non-ascii characters here, so encoding shouldn't matter
         name = adapter_info.AdapterName.decode()
         nice_name = adapter_info.Description
