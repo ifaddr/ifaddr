@@ -39,8 +39,7 @@ class Adapter(object):
     """
 
     def __init__(
-            self, name: str, nice_name: str, ips: List['IP'], index: Optional[int] = None,
-            multicast: bool = True
+        self, name: str, nice_name: str, ips: List['IP'], index: Optional[int] = None, multicast: bool = True
     ) -> None:
 
         #: Unique name that identifies the adapter in the system.
@@ -66,8 +65,11 @@ class Adapter(object):
 
     def __repr__(self) -> str:
         return "Adapter(name={name}, nice_name={nice_name}, ips={ips}, index={index}, multicast={multicast})".format(
-            name=repr(self.name), nice_name=repr(self.nice_name), ips=repr(self.ips), index=repr(self.index),
-            multicast=repr(self.multicast)
+            name=repr(self.name),
+            nice_name=repr(self.nice_name),
+            ips=repr(self.ips),
+            index=repr(self.index),
+            multicast=repr(self.multicast),
         )
 
 
