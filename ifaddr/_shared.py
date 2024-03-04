@@ -171,7 +171,7 @@ else:
         ]
 
 
-def sockaddr_to_ip(sockaddr_ptr: 'ctypes.pointer[sockaddr]') -> Optional[Union[_IPv4Address, _IPv6Address]]:
+def sockaddr_to_ip(sockaddr_ptr: ctypes._Pointer) -> Optional[Union[_IPv4Address, _IPv6Address]]:
     if sockaddr_ptr:
         if sockaddr_ptr[0].sa_familiy == socket.AF_INET:
             ipv4 = ctypes.cast(sockaddr_ptr, ctypes.POINTER(sockaddr_in))
