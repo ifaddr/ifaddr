@@ -17,7 +17,7 @@ IP addresses of the computer. It is tested on **Linux**, **OS X**, and
 **Solaris/Illumos** should also work.
 
 This library is open source and released under the MIT License. It works
-with Python 3.7+.
+with Python 3.8+.
 
 You can install it with `pip install ifaddr`. It doesn't need to
 compile anything, so there shouldn't be any surprises. Even on Windows.
@@ -85,6 +85,13 @@ property.  For example:
 ---------
 Changelog
 ---------
+
+Not released yet
+----------------
+
+Removed:
+
+* Dropped Python 3.7 support
 
 0.2.0
 -----
