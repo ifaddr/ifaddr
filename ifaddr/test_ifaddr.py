@@ -48,6 +48,6 @@ def test_netifaces_compatibility() -> None:
     # assert ifaddr.netifaces.gateways() == netifaces.gateways()
 
 
-def test_ipv6_prefixlength():
+def test_ipv6_prefixlength() -> None:
     assert ipv6_prefixlength(ipaddress.IPv6Address('ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff')) == 128
     assert ipv6_prefixlength(ipaddress.IPv6Address('ffff:ffff:ffff:ffff::')) == 64
