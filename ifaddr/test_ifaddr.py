@@ -26,7 +26,6 @@ class TestIfaddr(unittest.TestCase):
     """
 
     def test_get_adapters_contains_localhost(self) -> None:
-
         found = False
         adapters = ifaddr.get_adapters()
         for adapter in adapters:
