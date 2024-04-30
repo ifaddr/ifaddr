@@ -55,6 +55,17 @@ IP_ADAPTER_UNICAST_ADDRESS._fields_ = [
     ('OnLinkPrefixLength', ctypes.c_uint8),
 ]
 
+class IP_ADAPTER_MULTICAST_ADDRESS(ctypes.Structure):
+    pass
+
+
+IP_ADAPTER_MULTICAST_ADDRESS._fields_ = [
+    ('Length', wintypes.ULONG),
+    ('Flags', wintypes.DWORD),
+    ('Next', ctypes.POINTER(IP_ADAPTER_MULTICAST_ADDRESS)),
+    ('Address', SOCKET_ADDRESS),
+]
+
 
 class IP_ADAPTER_ADDRESSES(ctypes.Structure):
     pass
@@ -67,7 +78,7 @@ IP_ADAPTER_ADDRESSES._fields_ = [
     ('AdapterName', ctypes.c_char_p),
     ('FirstUnicastAddress', ctypes.POINTER(IP_ADAPTER_UNICAST_ADDRESS)),
     ('FirstAnycastAddress', ctypes.c_void_p),
-    ('FirstMulticastAddress', ctypes.c_void_p),
+    ('FirstMulticastAddress', ctypes.POINTER(IP_ADAPTER_MULTICAST_ADDRESS)),
     ('FirstDnsServerAddress', ctypes.c_void_p),
     ('DnsSuffix', ctypes.c_wchar_p),
     ('Description', ctypes.c_wchar_p),
@@ -126,7 +137,18 @@ def get_adapters(include_unconfigured: bool = False) -> Iterable[shared.Adapter]
 
     # Iterate through unicast addresses
     result = []  # type: List[shared.Adapter]
+
     for adapter_info in address_infos:
+        # We don't expect non-ascii characters here, so encoding shouldn't matter
+        name = adapter_info.AdapterName.decode()
+        nice_name = adapter_info.Description
+        index = adapter_info.IfIndex
+        ip = shared.sockaddr_to_ip(adapter_info.FirstUnicastAddress[0].Address.lpSockaddr) if adapter_info.FirstUnicastAddress else 'no single ip!'
+        multi = shared.sockaddr_to_ip(adapter_info.FirstMulticastAddress[0].Address.lpSockaddr) if adapter_info.FirstMulticastAddress else 'no multi!'
+        print(f'{name=} {nice_name=} {index=}, {ip=}, {multi=}')
+
+    for adapter_info in address_infos:
+        # print(f'XXXXXXXx {adapter_info=}')
 
         # We don't expect non-ascii characters here, so encoding shouldn't matter
         name = adapter_info.AdapterName.decode()
