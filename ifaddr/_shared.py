@@ -38,7 +38,10 @@ class Adapter(object):
     a IPv4 and an IPv6 IP address.
     """
 
-    def __init__(self, name: str, nice_name: str, ips: List['IP'], index: Optional[int] = None) -> None:
+    def __init__(
+        self, name: str, nice_name: str, ips: List['IP'], index: Optional[int] = None, multicast: bool = True
+    ) -> None:
+
         #: Unique name that identifies the adapter in the system.
         #: On Linux this is of the form of `eth0` or `eth0:1`, on
         #: Windows it is a UUID in string representation, such as
@@ -57,9 +60,16 @@ class Adapter(object):
         #: Adapter index as used by some API (e.g. IPv6 multicast group join).
         self.index = index
 
+        #: If this adapter supports multicast
+        self.multicast = multicast
+
     def __repr__(self) -> str:
-        return "Adapter(name={name}, nice_name={nice_name}, ips={ips}, index={index})".format(
-            name=repr(self.name), nice_name=repr(self.nice_name), ips=repr(self.ips), index=repr(self.index)
+        return "Adapter(name={name}, nice_name={nice_name}, ips={ips}, index={index}, multicast={multicast})".format(
+            name=repr(self.name),
+            nice_name=repr(self.nice_name),
+            ips=repr(self.ips),
+            index=repr(self.index),
+            multicast=repr(self.multicast),
         )
 
 
