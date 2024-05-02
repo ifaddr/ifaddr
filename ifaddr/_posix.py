@@ -62,7 +62,7 @@ def get_adapters(include_unconfigured: bool = False) -> Iterable[shared.Adapter]
 
     def add_ip(adapter_name: str, ip: Optional[shared.IP]) -> None:
         if adapter_name not in ips:
-            index = None  # type: Optional[int]
+            index: Optional[int] = None
             try:
                 index = socket.if_nametoindex(adapter_name)
             except (OSError, AttributeError):

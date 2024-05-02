@@ -86,7 +86,7 @@ def enumerate_interfaces_of_adapter(
     nice_name: str, address: IP_ADAPTER_UNICAST_ADDRESS
 ) -> Iterable[shared.IP]:
     # Iterate through linked list and fill list
-    addresses = []  # type: List[IP_ADAPTER_UNICAST_ADDRESS]
+    addresses: List[IP_ADAPTER_UNICAST_ADDRESS] = []
     while True:
         addresses.append(address)
         if not address.Next:
@@ -118,7 +118,7 @@ def get_adapters(include_unconfigured: bool = False) -> Iterable[shared.Adapter]
         raise ctypes.WinError()
 
     # Iterate through adapters fill array
-    address_infos = []  # type: List[IP_ADAPTER_ADDRESSES]
+    address_infos: List[IP_ADAPTER_ADDRESSES] = []
     address_info = IP_ADAPTER_ADDRESSES.from_buffer(addressbuffer)
     while True:
         address_infos.append(address_info)
@@ -127,7 +127,7 @@ def get_adapters(include_unconfigured: bool = False) -> Iterable[shared.Adapter]
         address_info = address_info.Next[0]
 
     # Iterate through unicast addresses
-    result = []  # type: List[shared.Adapter]
+    result: List[shared.Adapter] = []
     for adapter_info in address_infos:
         # We don't expect non-ascii characters here, so encoding shouldn't matter
         name = adapter_info.AdapterName.decode()
