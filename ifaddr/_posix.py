@@ -26,7 +26,7 @@ import collections
 import socket
 import sys
 
-from typing import Iterable, Optional
+from typing import Dict, Iterable, Optional
 
 import ifaddr._shared as shared
 
@@ -58,7 +58,7 @@ def get_adapters(include_unconfigured: bool = False) -> Iterable[shared.Adapter]
         eno = ctypes.get_errno()
         raise OSError(eno, os.strerror(eno))
 
-    ips = collections.OrderedDict()
+    ips: Dict[str, shared.Adapter] = collections.OrderedDict()
 
     def add_ip(adapter_name: str, ip: Optional[shared.IP]) -> None:
         if adapter_name not in ips:
