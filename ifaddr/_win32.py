@@ -20,10 +20,14 @@
 
 
 import ctypes
+import sys
 from ctypes import wintypes
 from typing import Iterable, List
 
 import ifaddr._shared as shared
+
+# To aid with platform-specific type-checking
+assert sys.platform == 'win32'
 
 NO_ERROR = 0
 ERROR_BUFFER_OVERFLOW = 111
@@ -75,7 +79,7 @@ IP_ADAPTER_ADDRESSES._fields_ = [
 ]
 
 
-iphlpapi = ctypes.windll.LoadLibrary("Iphlpapi")  # type: ignore
+iphlpapi = ctypes.windll.LoadLibrary("Iphlpapi")
 
 
 def enumerate_interfaces_of_adapter(
@@ -111,7 +115,7 @@ def get_adapters(include_unconfigured: bool = False) -> Iterable[shared.Adapter]
             ctypes.byref(addressbuffersize),
         )
     if retval != NO_ERROR:
-        raise ctypes.WinError()  # type: ignore
+        raise ctypes.WinError()
 
     # Iterate through adapters fill array
     address_infos = []  # type: List[IP_ADAPTER_ADDRESSES]

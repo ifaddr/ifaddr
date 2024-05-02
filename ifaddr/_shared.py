@@ -116,7 +116,9 @@ class IP(object):
         )
 
 
-if platform.system() == "Darwin" or "BSD" in platform.system():
+import sys
+
+if sys.platform == "darwin" or sys.platform.startswith("freebsd") or sys.platform.startswith("openbsd"):
     # BSD derived systems use marginally different structures
     # than either Linux or Windows.
     # I still keep it in `shared` since we can use
@@ -150,10 +152,10 @@ if platform.system() == "Darwin" or "BSD" in platform.system():
 
 else:
 
-    class sockaddr(ctypes.Structure):  # type: ignore
+    class sockaddr(ctypes.Structure):
         _fields_ = [('sa_familiy', ctypes.c_uint16), ('sa_data', ctypes.c_uint8 * 14)]
 
-    class sockaddr_in(ctypes.Structure):  # type: ignore
+    class sockaddr_in(ctypes.Structure):
         _fields_ = [
             ('sin_familiy', ctypes.c_uint16),
             ('sin_port', ctypes.c_uint16),
@@ -161,7 +163,7 @@ else:
             ('sin_zero', ctypes.c_uint8 * 8),
         ]
 
-    class sockaddr_in6(ctypes.Structure):  # type: ignore
+    class sockaddr_in6(ctypes.Structure):
         _fields_ = [
             ('sin6_familiy', ctypes.c_uint16),
             ('sin6_port', ctypes.c_uint16),

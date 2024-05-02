@@ -24,12 +24,16 @@ import ctypes.util
 import ipaddress
 import collections
 import socket
+import sys
 
 from typing import Iterable, Optional
 
 import ifaddr._shared as shared
 
 # from ifaddr._shared import sockaddr, Interface, sockaddr_to_ip, ipv6_prefixlength
+
+# To aid with platform-specific type-checking
+assert sys.platform != 'win32'
 
 
 class ifaddrs(ctypes.Structure):
@@ -44,7 +48,7 @@ ifaddrs._fields_ = [
     ('ifa_netmask', ctypes.POINTER(shared.sockaddr)),
 ]
 
-libc = ctypes.CDLL(ctypes.util.find_library("socket" if os.uname()[0] == "SunOS" else "c"), use_errno=True)  # type: ignore
+libc = ctypes.CDLL(ctypes.util.find_library("socket" if os.uname()[0] == "SunOS" else "c"), use_errno=True)
 
 
 def get_adapters(include_unconfigured: bool = False) -> Iterable[shared.Adapter]:
@@ -60,9 +64,7 @@ def get_adapters(include_unconfigured: bool = False) -> Iterable[shared.Adapter]
         if adapter_name not in ips:
             index = None  # type: Optional[int]
             try:
-                # Mypy errors on this when the Windows CI runs:
-                #     error: Module has no attribute "if_nametoindex"
-                index = socket.if_nametoindex(adapter_name)  # type: ignore
+                index = socket.if_nametoindex(adapter_name)
             except (OSError, AttributeError):
                 pass
             ips[adapter_name] = shared.Adapter(adapter_name, adapter_name, [], index=index)
