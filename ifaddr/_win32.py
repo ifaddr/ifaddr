@@ -91,7 +91,7 @@ def enumerate_interfaces_of_adapter(
         addresses.append(address)
         if not address.Next:
             break
-        address = address.Next[0]
+        address = address.Next.contents
 
     for address in addresses:
         ip = shared.sockaddr_to_ip(address.Address.lpSockaddr)
@@ -124,7 +124,7 @@ def get_adapters(include_unconfigured: bool = False) -> Iterable[shared.Adapter]
         address_infos.append(address_info)
         if not address_info.Next:
             break
-        address_info = address_info.Next[0]
+        address_info = address_info.Next.contents
 
     # Iterate through unicast addresses
     result: List[shared.Adapter] = []
@@ -136,7 +136,7 @@ def get_adapters(include_unconfigured: bool = False) -> Iterable[shared.Adapter]
 
         if adapter_info.FirstUnicastAddress:
             ips = enumerate_interfaces_of_adapter(
-                adapter_info.FriendlyName, adapter_info.FirstUnicastAddress[0]
+                adapter_info.FriendlyName, adapter_info.FirstUnicastAddress.contents
             )
             ips = list(ips)
             result.append(shared.Adapter(name, nice_name, ips, index=index))
