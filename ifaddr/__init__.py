@@ -19,15 +19,13 @@
 # IN THE SOFTWARE.
 
 
-import os
+import sys
 
 from ifaddr._shared import Adapter, IP
 
-if os.name == "nt":
+if sys.platform == "win32":
     from ifaddr._win32 import get_adapters
-elif os.name == "posix":
-    from ifaddr._posix import get_adapters
 else:
-    raise RuntimeError("Unsupported Operating System: %s" % os.name)
+    from ifaddr._posix import get_adapters
 
 __all__ = ['Adapter', 'IP', 'get_adapters']

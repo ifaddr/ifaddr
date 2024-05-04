@@ -116,7 +116,9 @@ class IP(object):
         )
 
 
-if platform.system() == "Darwin" or "BSD" in platform.system():
+import sys
+
+if sys.platform == "darwin" or sys.platform.startswith("freebsd") or sys.platform.startswith("openbsd"):
     # BSD derived systems use marginally different structures
     # than either Linux or Windows.
     # I still keep it in `shared` since we can use
@@ -150,10 +152,10 @@ if platform.system() == "Darwin" or "BSD" in platform.system():
 
 else:
 
-    class sockaddr(ctypes.Structure):  # type: ignore
+    class sockaddr(ctypes.Structure):
         _fields_ = [('sa_familiy', ctypes.c_uint16), ('sa_data', ctypes.c_uint8 * 14)]
 
-    class sockaddr_in(ctypes.Structure):  # type: ignore
+    class sockaddr_in(ctypes.Structure):
         _fields_ = [
             ('sin_familiy', ctypes.c_uint16),
             ('sin_port', ctypes.c_uint16),
@@ -161,7 +163,7 @@ else:
             ('sin_zero', ctypes.c_uint8 * 8),
         ]
 
-    class sockaddr_in6(ctypes.Structure):  # type: ignore
+    class sockaddr_in6(ctypes.Structure):
         _fields_ = [
             ('sin6_familiy', ctypes.c_uint16),
             ('sin6_port', ctypes.c_uint16),
@@ -173,17 +175,17 @@ else:
 
 def sockaddr_to_ip(sockaddr_ptr: ctypes._Pointer) -> Optional[Union[_IPv4Address, _IPv6Address]]:
     if sockaddr_ptr:
-        if sockaddr_ptr[0].sa_familiy == socket.AF_INET:
+        if sockaddr_ptr.contents.sa_familiy == socket.AF_INET:
             ipv4 = ctypes.cast(sockaddr_ptr, ctypes.POINTER(sockaddr_in))
-            ippacked = bytes(bytearray(ipv4[0].sin_addr))
+            ippacked = bytes(bytearray(ipv4.contents.sin_addr))
             ip = str(ipaddress.IPv4Address(ippacked))
             return ip
-        elif sockaddr_ptr[0].sa_familiy == socket.AF_INET6:
+        elif sockaddr_ptr.contents.sa_familiy == socket.AF_INET6:
             ipv6 = ctypes.cast(sockaddr_ptr, ctypes.POINTER(sockaddr_in6))
-            flowinfo = ipv6[0].sin6_flowinfo
-            ippacked = bytes(bytearray(ipv6[0].sin6_addr))
+            flowinfo = ipv6.contents.sin6_flowinfo
+            ippacked = bytes(bytearray(ipv6.contents.sin6_addr))
             ip = str(ipaddress.IPv6Address(ippacked))
-            scope_id = ipv6[0].sin6_scope_id
+            scope_id = ipv6.contents.sin6_scope_id
             return (ip, flowinfo, scope_id)
     return None
 
