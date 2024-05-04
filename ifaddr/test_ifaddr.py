@@ -1,12 +1,13 @@
 # Copyright (C) 2015 Stefan C. Mueller
 
+import ipaddress
 import unittest
 
 import pytest
 
 import ifaddr
 import ifaddr.netifaces
-
+from ifaddr._shared import ipv6_prefixlength
 
 try:
     import netifaces
@@ -45,3 +46,8 @@ def test_netifaces_compatibility() -> None:
     #     print(interface)
     #     assert ifaddr.netifaces.ifaddresses(interface) == netifaces.ifaddresses(interface)
     # assert ifaddr.netifaces.gateways() == netifaces.gateways()
+
+
+def test_ipv6_prefixlength() -> None:
+    assert ipv6_prefixlength(ipaddress.IPv6Address('ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff')) == 128
+    assert ipv6_prefixlength(ipaddress.IPv6Address('ffff:ffff:ffff:ffff::')) == 64
