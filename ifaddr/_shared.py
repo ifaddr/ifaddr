@@ -177,13 +177,13 @@ def sockaddr_to_ip(sockaddr_ptr: ctypes._Pointer) -> Optional[Union[_IPv4Address
     if sockaddr_ptr:
         if sockaddr_ptr.contents.sa_familiy == socket.AF_INET:
             ipv4 = ctypes.cast(sockaddr_ptr, ctypes.POINTER(sockaddr_in))
-            ippacked = bytes(bytearray(ipv4.contents.sin_addr))
+            ippacked = bytes(ipv4.contents.sin_addr)
             ip = str(ipaddress.IPv4Address(ippacked))
             return ip
         elif sockaddr_ptr.contents.sa_familiy == socket.AF_INET6:
             ipv6 = ctypes.cast(sockaddr_ptr, ctypes.POINTER(sockaddr_in6))
             flowinfo = ipv6.contents.sin6_flowinfo
-            ippacked = bytes(bytearray(ipv6.contents.sin6_addr))
+            ippacked = bytes(ipv6.contents.sin6_addr)
             ip = str(ipaddress.IPv6Address(ippacked))
             scope_id = ipv6.contents.sin6_scope_id
             return (ip, flowinfo, scope_id)
