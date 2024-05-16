@@ -23,8 +23,9 @@ import ctypes
 import socket
 import ipaddress
 import platform
+from dataclasses import dataclass
 
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Union
 
 
 class Adapter(object):
@@ -63,11 +64,18 @@ class Adapter(object):
         )
 
 
-# Type of an IPv4 address (a string in "xxx.xxx.xxx.xxx" format)
-_IPv4Address = ipaddress.IPv4Address
+# Technically we don't need this wrapper but when dealing with an IPv4, IPv6 union it's nice
+# to be able to unconditionally access the "address" property on it.
+@dataclass
+class IPv4Ext:
+    address: ipaddress.IPv4Address
 
-# Type of an IPv6 address (a three-tuple `(ip, flowinfo, scope_id)`)
-_IPv6Address = Tuple[ipaddress.IPv6Address, int, int]
+
+@dataclass
+class IPv6Ext:
+    address: ipaddress.IPv6Address
+    flowinfo: int
+    scope_id: int
 
 
 class IP(object):
@@ -75,13 +83,13 @@ class IP(object):
     Represents an IP address of an adapter.
     """
 
-    def __init__(self, ip: Union[_IPv4Address, _IPv6Address], network_prefix: int, nice_name: str) -> None:
+    def __init__(self, ip: Union[IPv4Ext, IPv6Ext], network_prefix: int, nice_name: str) -> None:
         #: IP address. For IPv4 addresses this is a string in
         #: "xxx.xxx.xxx.xxx" format. For IPv6 addresses this
         #: is a three-tuple `(ip, flowinfo, scope_id)`, where
         #: `ip` is a string in the usual collon separated
         #: hex format.
-        self.ip = (str(ip[0]),) + ip[1:] if isinstance(ip, tuple) else str(ip)
+        self.ip = (str(ip.address), ip.flowinfo, ip.scope_id) if isinstance(ip, IPv6Ext) else str(ip.address)
 
         #: Number of bits of the IP that represent the
         #: network. For a `255.255.255.0` netmask, this
@@ -173,19 +181,20 @@ else:
         ]
 
 
-def sockaddr_to_ip(sockaddr_ptr: ctypes._Pointer) -> Optional[Union[_IPv4Address, _IPv6Address]]:
+def sockaddr_to_ip(sockaddr_ptr: ctypes._Pointer) -> Optional[Union[IPv4Ext, IPv6Ext]]:
     if sockaddr_ptr:
         if sockaddr_ptr.contents.sa_familiy == socket.AF_INET:
-            ipv4 = ctypes.cast(sockaddr_ptr, ctypes.POINTER(sockaddr_in))
-            ippacked = bytes(ipv4.contents.sin_addr)
-            return ipaddress.IPv4Address(ippacked)
+            ipv4 = ctypes.cast(sockaddr_ptr, ctypes.POINTER(sockaddr_in)).contents
+            ippacked = bytes(ipv4.sin_addr)
+            return IPv4Ext(ipaddress.IPv4Address(ippacked))
         elif sockaddr_ptr.contents.sa_familiy == socket.AF_INET6:
-            ipv6 = ctypes.cast(sockaddr_ptr, ctypes.POINTER(sockaddr_in6))
-            flowinfo = ipv6.contents.sin6_flowinfo
-            ippacked = bytes(ipv6.contents.sin6_addr)
-            ip = ipaddress.IPv6Address(ippacked)
-            scope_id = ipv6.contents.sin6_scope_id
-            return (ip, flowinfo, scope_id)
+            ipv6 = ctypes.cast(sockaddr_ptr, ctypes.POINTER(sockaddr_in6)).contents
+            ippacked = bytes(ipv6.sin6_addr)
+            return IPv6Ext(
+                address=ipaddress.IPv6Address(ippacked),
+                flowinfo=ipv6.sin6_flowinfo,
+                scope_id=ipv6.sin6_scope_id,
+            )
     return None
 
 
