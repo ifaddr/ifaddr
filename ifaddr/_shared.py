@@ -64,10 +64,10 @@ class Adapter(object):
 
 
 # Type of an IPv4 address (a string in "xxx.xxx.xxx.xxx" format)
-_IPv4Address = str
+_IPv4Address = ipaddress.IPv4Address
 
 # Type of an IPv6 address (a three-tuple `(ip, flowinfo, scope_id)`)
-_IPv6Address = Tuple[str, int, int]
+_IPv6Address = Tuple[ipaddress.IPv6Address, int, int]
 
 
 class IP(object):
@@ -81,7 +81,7 @@ class IP(object):
         #: is a three-tuple `(ip, flowinfo, scope_id)`, where
         #: `ip` is a string in the usual collon separated
         #: hex format.
-        self.ip = ip
+        self.ip = (str(ip[0]),) + ip[1:] if isinstance(ip, tuple) else str(ip)
 
         #: Number of bits of the IP that represent the
         #: network. For a `255.255.255.0` netmask, this
@@ -178,13 +178,12 @@ def sockaddr_to_ip(sockaddr_ptr: ctypes._Pointer) -> Optional[Union[_IPv4Address
         if sockaddr_ptr.contents.sa_familiy == socket.AF_INET:
             ipv4 = ctypes.cast(sockaddr_ptr, ctypes.POINTER(sockaddr_in))
             ippacked = bytes(ipv4.contents.sin_addr)
-            ip = str(ipaddress.IPv4Address(ippacked))
-            return ip
+            return ipaddress.IPv4Address(ippacked)
         elif sockaddr_ptr.contents.sa_familiy == socket.AF_INET6:
             ipv6 = ctypes.cast(sockaddr_ptr, ctypes.POINTER(sockaddr_in6))
             flowinfo = ipv6.contents.sin6_flowinfo
             ippacked = bytes(ipv6.contents.sin6_addr)
-            ip = str(ipaddress.IPv6Address(ippacked))
+            ip = ipaddress.IPv6Address(ippacked)
             scope_id = ipv6.contents.sin6_scope_id
             return (ip, flowinfo, scope_id)
     return None
