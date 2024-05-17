@@ -61,9 +61,27 @@ IP_ADAPTER_UNICAST_ADDRESS._fields_ = [
 ]
 
 
+class IP_ADAPTER_FLAGS_ADDRESS(ctypes.Structure):
+    pass
+
+
+# IP_ADAPTER_ANYCAST_ADDRESS_XP, IP_ADAPTER_MULTICAST_ADDRESS_XP and
+# IP_ADAPTER_DNS_SERVER_ADDRESS_XP are almost identical so we use a single structure
+# for all of them.
+IP_ADAPTER_FLAGS_ADDRESS._fields_ = [
+    ('Length', wintypes.ULONG),
+    # In IP_ADAPTER_DNS_SERVER_ADDRESS_XP this property is called Reserved and likely not used.
+    ('Flags', wintypes.DWORD),
+    ('Next', ctypes.POINTER(IP_ADAPTER_FLAGS_ADDRESS)),
+    ('Address', SOCKET_ADDRESS),
+]
+
+
 class IP_ADAPTER_ADDRESSES(ctypes.Structure):
     pass
 
+
+MAX_ADAPTER_ADDRESS_LENGTH = 8
 
 IP_ADAPTER_ADDRESSES._fields_ = [
     ('Length', wintypes.ULONG),
@@ -71,12 +89,22 @@ IP_ADAPTER_ADDRESSES._fields_ = [
     ('Next', ctypes.POINTER(IP_ADAPTER_ADDRESSES)),
     ('AdapterName', ctypes.c_char_p),
     ('FirstUnicastAddress', ctypes.POINTER(IP_ADAPTER_UNICAST_ADDRESS)),
-    ('FirstAnycastAddress', ctypes.c_void_p),
-    ('FirstMulticastAddress', ctypes.c_void_p),
-    ('FirstDnsServerAddress', ctypes.c_void_p),
+    ('FirstAnycastAddress', ctypes.POINTER(IP_ADAPTER_FLAGS_ADDRESS)),
+    ('FirstMulticastAddress', ctypes.POINTER(IP_ADAPTER_FLAGS_ADDRESS)),
+    ('FirstDnsServerAddress', ctypes.POINTER(IP_ADAPTER_FLAGS_ADDRESS)),
     ('DnsSuffix', ctypes.c_wchar_p),
     ('Description', ctypes.c_wchar_p),
     ('FriendlyName', ctypes.c_wchar_p),
+    ('PhysicalAddress', ctypes.c_char * MAX_ADAPTER_ADDRESS_LENGTH),
+    ('PhysicalAddressLength', wintypes.ULONG),
+    ('Flags', wintypes.ULONG),
+    ('Mtu', wintypes.ULONG),
+    ('IfType', wintypes.DWORD),
+    ('OperStatus', ctypes.c_uint),
+    # Windows XP SP1 and later
+    ('Ipv6IfIndex', wintypes.DWORD),
+    # Windows XP SP1 and later
+    ('ZoneIndices', wintypes.DWORD * 16),
 ]
 
 
@@ -85,9 +113,13 @@ IP_ADAPTER_ADDRESSES._fields_ = [
 
 
 @dataclass
-class IPAdapterUnicastAddress:
+class IPAdapterAddressWithFlags:
     flags: int
     address: Union[shared.IPv4Ext, shared.IPv6Ext]
+
+
+@dataclass
+class IPAdapterUnicastAddress(IPAdapterAddressWithFlags):
     prefix_origin: int
     suffix_origin: int
     dad_state: int
@@ -102,27 +134,33 @@ class IPAdapterAddress:
     if_index: int
     adapter_name: str
     unicast_addresses: List[IPAdapterUnicastAddress]
-    # Not implemented yet:
-    # anycast_addresses: ...
-    # multicast_addresses: ...
-    # dns_server_addresses = ...
+    anycast_addresses: List[IPAdapterAddressWithFlags]
+    multicast_addresses: List[IPAdapterAddressWithFlags]
+    dns_server_addresses: List[IPAdapterAddressWithFlags]
     dns_suffix: str
     description: str
     friendly_name: str
+    physical_address: bytes
+    flags: int
+    mtu: int
+    if_type: int
+    oper_status: int
+    ipv6_if_index: int
+    zone_indices: List[int]
     # Not implemented yet: there's a bunch of extra properties left in IP_ADAPTER_ADDRESSES
 
 
 iphlpapi = ctypes.windll.LoadLibrary("Iphlpapi")
 
-T = TypeVar('T', bound=IP_ADAPTER_UNICAST_ADDRESS)
+T = TypeVar('T', IP_ADAPTER_UNICAST_ADDRESS, IP_ADAPTER_FLAGS_ADDRESS)
 
 
-def gather_linked_list(first: T) -> List[T]:
-    result = [first]
+def gather_linked_list(first: ctypes._Pointer) -> List[T]:
     current = first
-    while current.Next:
-        current = current.Next.contents
-        result.append(current)
+    result: List[T] = []
+    while current:
+        result.append(current.contents)
+        current = current.contents.Next
     return result
 
 
@@ -164,27 +202,51 @@ def get_win32_adapters() -> List[IPAdapterAddress]:
             a.IfIndex,
             # We don't expect non-ascii characters here, so encoding shouldn't matter
             a.AdapterName.decode(),
-            (
-                [
-                    IPAdapterUnicastAddress(
-                        ua.Flags,
-                        shared.sockaddr_to_ip_strict(ua.Address.lpSockaddr),
-                        ua.PrefixOrigin,
-                        ua.SuffixOrigin,
-                        ua.DadState,
-                        ua.ValidLifetime,
-                        ua.PreferredLifetime,
-                        ua.LeaseLifetime,
-                        ua.OnLinkPrefixLength,
-                    )
-                    for ua in gather_linked_list(a.FirstUnicastAddress.contents)
-                ]
-                if a.FirstUnicastAddress
-                else []
-            ),
+            [
+                IPAdapterUnicastAddress(
+                    ua.Flags,
+                    shared.sockaddr_to_ip_strict(ua.Address.lpSockaddr),
+                    ua.PrefixOrigin,
+                    ua.SuffixOrigin,
+                    ua.DadState,
+                    ua.ValidLifetime,
+                    ua.PreferredLifetime,
+                    ua.LeaseLifetime,
+                    ua.OnLinkPrefixLength,
+                )
+                for ua in gather_linked_list(a.FirstUnicastAddress)
+            ],
+            [
+                IPAdapterAddressWithFlags(
+                    ua.Flags,
+                    shared.sockaddr_to_ip_strict(ua.Address.lpSockaddr),
+                )
+                for ua in gather_linked_list(a.FirstAnycastAddress)
+            ],
+            [
+                IPAdapterAddressWithFlags(
+                    ua.Flags,
+                    shared.sockaddr_to_ip_strict(ua.Address.lpSockaddr),
+                )
+                for ua in gather_linked_list(a.FirstMulticastAddress)
+            ],
+            [
+                IPAdapterAddressWithFlags(
+                    ua.Flags,
+                    shared.sockaddr_to_ip_strict(ua.Address.lpSockaddr),
+                )
+                for ua in gather_linked_list(a.FirstDnsServerAddress)
+            ],
             a.DnsSuffix,
             a.Description,
             a.FriendlyName,
+            a.PhysicalAddress[: a.PhysicalAddressLength],
+            a.Flags,
+            a.Mtu,
+            a.IfType,
+            a.OperStatus,
+            a.Ipv6IfIndex,
+            list(a.ZoneIndices),
         )
         for a in address_infos
     ]
