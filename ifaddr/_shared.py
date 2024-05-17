@@ -197,6 +197,13 @@ def sockaddr_to_ip(sockaddr_ptr: ctypes._Pointer) -> Optional[Union[IPv4Ext, IPv
     return None
 
 
+def sockaddr_to_ip_strict(sockaddr_ptr: ctypes._Pointer) -> Union[IPv4Ext, IPv6Ext]:
+    """A version of sockaddr_to_ip that raises an exception instead of returning None."""
+    result = sockaddr_to_ip(sockaddr_ptr)
+    assert result is not None
+    return result
+
+
 def ipv6_prefixlength(address: ipaddress.IPv6Address) -> int:
     prefix_length = 0
     address_as_int = int(address)
