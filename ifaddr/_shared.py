@@ -22,7 +22,6 @@
 import ctypes
 import socket
 import ipaddress
-import platform
 from dataclasses import dataclass
 
 from typing import List, Optional, Union
