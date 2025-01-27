@@ -2,3 +2,21 @@
 line-length = 110
 target_version = ['py37', 'py38', 'py39', 'py310']
 skip_string_normalization = true
+
+[tool.mypy]
+# The warn_unused_configs flag may be useful to debug misspelled section names.
+warn_unused_configs = true
+
+# Shows a warning when returning a value with type 'Any' from
+# a function declared with a non-'Any' return type.
+warn_return_any = true
+
+# Disallows defining functions without type annotations
+# or with incomplete type annotations.
+disallow_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = "netifaces.*"
+
+# Suppresses error messages about imports that cannot be resolved.
+ignore_missing_imports = true
