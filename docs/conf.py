@@ -49,8 +49,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'ifaddr'
-copyright = u'2014, Stefan C. Mueller'
+project = 'ifaddr'
+copyright = '2014, Stefan C. Mueller'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -193,7 +193,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-    ('index', 'python.tex', u'ifaddr Documentation', u'Stefan C. Mueller', 'manual'),
+    ('index', 'python.tex', 'ifaddr Documentation', 'Stefan C. Mueller', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -221,7 +221,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [('index', 'python', u'ifaddr Documentation', [u'Stefan C. Mueller'], 1)]
+man_pages = [('index', 'python', 'ifaddr Documentation', ['Stefan C. Mueller'], 1)]
 
 # If true, show URL addresses after external links.
 # man_show_urls = False
@@ -236,8 +236,8 @@ texinfo_documents = [
     (
         'index',
         'python',
-        u'ifaddr Documentation',
-        u'Stefan C. Mueller',
+        'ifaddr Documentation',
+        'Stefan C. Mueller',
         'python',
         'Enumerates all IP addresses on all network adapters of the system.',
         'Miscellaneous',
