@@ -63,7 +63,7 @@ You get both IPv4 and IPv6 addresses. The later complete with
 flowinfo and scope_id.
 
 If you wish to include network interfaces that do not have a configured IP
-addresss, pass the `include_unconfigured` parameter to `get_adapters()`.
+address, pass the `include_unconfigured` parameter to `get_adapters()`.
 Adapters with no configured IP addresses will have an zero-length `ips`
 property.  For example:
 
