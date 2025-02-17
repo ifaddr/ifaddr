@@ -1,14 +1,14 @@
 ifaddr - Enumerate network interfaces/adapters and their IP addresses
 =====================================================================
 
-.. image:: https://github.com/pydron/ifaddr/workflows/CI/badge.svg
-    :target: https://github.com/pydron/ifaddr/actions?query=workflow%3ACI+branch%3Amaster
+.. image:: https://github.com/ifaddr/ifaddr/workflows/CI/badge.svg
+    :target: https://github.com/ifaddr/ifaddr/actions?query=workflow%3ACI+branch%3Amaster
 
 .. image:: https://img.shields.io/pypi/v/ifaddr.svg
     :target: https://pypi.python.org/pypi/ifaddr
 
-.. image:: https://codecov.io/gh/pydron/ifaddr/branch/master/graph/badge.svg
-  :target: https://codecov.io/gh/pydron/ifaddr
+.. image:: https://codecov.io/gh/ifaddr/ifaddr/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/ifaddr/ifaddr
 
 `ifaddr` is a small Python library that allows you to find all the Ethernet and
 IP addresses of the computer. It is tested on **Linux**, **OS X**, and
