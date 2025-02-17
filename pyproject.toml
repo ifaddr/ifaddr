@@ -1,3 +1,53 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ifaddr"
+version = "0.2.0"
+description = "Cross-platform network interface and IP address enumeration library"
+readme = "README.rst"
+authors = [
+    {name = "Stefan C. Mueller", email = "scm@smurn.org"},
+]
+license = {text = "MIT"}
+requires-python = ">=3.9"
+classifiers = [
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: System :: Networking",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+keywords = [
+    "network interfaces",
+    "network adapters",
+    "network addresses",
+    "IP addresses",
+]
+
+[dependency-groups]
+dev = [
+    "black==24.3.0 ; implementation_name == 'cpython'",
+    "mypy==1.8.0 ; implementation_name == 'cpython'",
+    "netifaces>=0.11.0 ; python_full_version == '3.8.*' or sys_platform != 'win32'",
+    "pytest==8.0.2",
+    "pytest-cov==4.1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/pydron/ifaddr"
+
+[tool.hatch.build.targets.wheel]
+packages = ["ifaddr"]
+
+[tool.hatch.build.targets.wheel.shared-data]
+"ifaddr/py.typed" = "ifaddr/py.typed"
+
 [tool.black]
 line-length = 110
 target_version = ['py39', 'py310']
@@ -20,3 +70,4 @@ module = "netifaces.*"
 
 # Suppresses error messages about imports that cannot be resolved.
 ignore_missing_imports = true
+
