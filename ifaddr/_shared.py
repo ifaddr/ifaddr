@@ -98,7 +98,7 @@ class IP:
     Represents an IP address of an adapter.
     """
 
-    ip: tuple[str, int, int] | str
+    ip: Union[tuple[str, int, int], str]
     network_prefix: int
     nice_name: str
 
