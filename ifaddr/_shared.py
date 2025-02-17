@@ -27,7 +27,7 @@ from dataclasses import dataclass
 from typing import List, Optional, Union
 
 
-class Adapter(object):
+class Adapter:
     """
     Represents a network interface device controller (NIC), such as a
     network card. An adapter can have multiple IPs.
@@ -77,7 +77,7 @@ class IPv6Ext:
     scope_id: int
 
 
-class IP(object):
+class IP:
     """
     Represents an IP address of an adapter.
     """
