@@ -41,7 +41,7 @@ class Adapter:
     name: str
     nice_name: str
     ips: List['IP']
-    index: int | None
+    index: Optional[int]
     multicast: bool
 
     def __init__(
