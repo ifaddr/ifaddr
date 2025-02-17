@@ -38,6 +38,7 @@ setup(
     packages=find_packages(),
     package_data={'ifaddr': ['py.typed']},
     license='MIT',
+    python_requires=">=3.8",
     classifiers=[
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
