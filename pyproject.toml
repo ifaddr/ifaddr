@@ -45,6 +45,10 @@ docs = [
     "furo>=2024.8.6",
     "sphinx>=7.4.7",
 ]
+devdocs = [
+    "sphinx-autobuild",
+    {include-group = "docs"},
+]
 
 [project.urls]
 Homepage = "https://github.com/pydron/ifaddr"
