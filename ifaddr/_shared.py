@@ -37,6 +37,11 @@ class Adapter:
     of this class. Each of those 'virtual' adapters can have both
     a IPv4 and an IPv6 IP address.
     """
+    name: str
+    nice_name: str
+    ips: List['IP']
+    index: int | None
+    multicast: bool
 
     def __init__(
         self, name: str, nice_name: str, ips: List['IP'], index: Optional[int] = None, multicast: bool = True
@@ -91,6 +96,9 @@ class IP:
     """
     Represents an IP address of an adapter.
     """
+    ip: tuple[str, int, int] | str
+    network_prefix: int
+    nice_name: str
 
     def __init__(self, ip: Union[IPv4Ext, IPv6Ext], network_prefix: int, nice_name: str) -> None:
         #: IP address. For IPv4 addresses this is a string in
