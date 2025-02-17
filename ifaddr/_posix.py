@@ -49,7 +49,9 @@ ifaddrs._fields_ = [
     ('ifa_netmask', ctypes.POINTER(shared.sockaddr)),
 ]
 
-libc = ctypes.CDLL(ctypes.util.find_library('socket' if os.uname()[0] == 'SunOS' else 'c'), use_errno=True)
+libc = ctypes.CDLL(
+    ctypes.util.find_library('socket' if os.uname()[0] == 'SunOS' else 'c'), use_errno=True
+)
 
 if platform.system() == 'Darwin' or 'BSD' in platform.system():
     IFF_MULTICAST = 1 << 15
@@ -85,12 +87,16 @@ def get_adapters(include_unconfigured: bool = False) -> Iterable[shared.Adapter]
         ip_addr = shared.sockaddr_to_ip(addr.contents.ifa_addr)
         if ip_addr:
             if addr.contents.ifa_netmask and not addr.contents.ifa_netmask.contents.sa_familiy:
-                addr.contents.ifa_netmask.contents.sa_familiy = addr.contents.ifa_addr.contents.sa_familiy
+                addr.contents.ifa_netmask.contents.sa_familiy = (
+                    addr.contents.ifa_addr.contents.sa_familiy
+                )
             netmask = shared.sockaddr_to_ip(addr.contents.ifa_netmask)
             if isinstance(netmask, shared.IPv6Ext):
                 prefixlen = shared.ipv6_prefixlength(netmask.address)
             else:
-                assert netmask is not None, f'sockaddr_to_ip({addr.contents.ifa_netmask}) returned None'
+                assert (
+                    netmask is not None
+                ), f'sockaddr_to_ip({addr.contents.ifa_netmask}) returned None'
                 netmaskStr = str('0.0.0.0/' + str(netmask.address))
                 prefixlen = ipaddress.IPv4Network(netmaskStr).prefixlen
             ip = shared.IP(ip_addr, prefixlen, name)

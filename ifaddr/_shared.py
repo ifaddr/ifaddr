@@ -45,7 +45,12 @@ class Adapter:
     multicast: bool
 
     def __init__(
-        self, name: str, nice_name: str, ips: List['IP'], index: Optional[int] = None, multicast: bool = True
+        self,
+        name: str,
+        nice_name: str,
+        ips: List['IP'],
+        index: Optional[int] = None,
+        multicast: bool = True,
     ) -> None:
 
         #: Unique name that identifies the adapter in the system.
@@ -108,7 +113,11 @@ class IP:
         #: is a three-tuple `(ip, flowinfo, scope_id)`, where
         #: `ip` is a string in the usual collon separated
         #: hex format.
-        self.ip = (str(ip.address), ip.flowinfo, ip.scope_id) if isinstance(ip, IPv6Ext) else str(ip.address)
+        self.ip = (
+            (str(ip.address), ip.flowinfo, ip.scope_id)
+            if isinstance(ip, IPv6Ext)
+            else str(ip.address)
+        )
 
         #: Number of bits of the IP that represent the
         #: network. For a `255.255.255.0` netmask, this
@@ -139,13 +148,19 @@ class IP:
 
     def __repr__(self) -> str:
         return 'IP(ip={ip}, network_prefix={network_prefix}, nice_name={nice_name})'.format(
-            ip=repr(self.ip), network_prefix=repr(self.network_prefix), nice_name=repr(self.nice_name)
+            ip=repr(self.ip),
+            network_prefix=repr(self.network_prefix),
+            nice_name=repr(self.nice_name),
         )
 
 
 import sys
 
-if sys.platform == 'darwin' or sys.platform.startswith('freebsd') or sys.platform.startswith('openbsd'):
+if (
+    sys.platform == 'darwin'
+    or sys.platform.startswith('freebsd')
+    or sys.platform.startswith('openbsd')
+):
     # BSD derived systems use marginally different structures
     # than either Linux or Windows.
     # I still keep it in `shared` since we can use
