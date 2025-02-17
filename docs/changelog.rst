@@ -8,8 +8,8 @@ Removed:
 
 * Dropped Python 3.7 and 3.8 support
 
-0.2.0
------
+v0.2.0
+------
 
 * Added an option to include IP-less adapters, thanks to memory
 * Fixed a bug where an interface's name was `bytes`, not `str`, on Windows
@@ -21,8 +21,8 @@ Backwards incompatible/breaking changes:
 
 * Dropped Python 3.6 support
 
-0.1.7
------
+v0.1.7
+------
 
 * Fixed Python 3 compatibility in the examples, thanks to Tristan Stenner and Josef Schlehofer
 * Exposed network interface indexes in Adapter.index, thanks to Dmitry Tantsur
