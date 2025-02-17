@@ -13,6 +13,11 @@ This library is open source and released under the MIT License.
 You can install it with `pip install ifaddr`. It doesn't need to
 compile anything, so there shouldn't be any surprises. Even on Windows.
 
+.. toctree::
+    :maxdepth: 1
+
+    changelog
+
 ----------------------
 Let's get going!
 ----------------------
