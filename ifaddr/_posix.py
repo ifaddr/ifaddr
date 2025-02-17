@@ -94,9 +94,9 @@ def get_adapters(include_unconfigured: bool = False) -> Iterable[shared.Adapter]
             if isinstance(netmask, shared.IPv6Ext):
                 prefixlen = shared.ipv6_prefixlength(netmask.address)
             else:
-                assert (
-                    netmask is not None
-                ), f'sockaddr_to_ip({addr.contents.ifa_netmask}) returned None'
+                assert netmask is not None, (
+                    f'sockaddr_to_ip({addr.contents.ifa_netmask}) returned None'
+                )
                 netmaskStr = str('0.0.0.0/' + str(netmask.address))
                 prefixlen = ipaddress.IPv4Network(netmaskStr).prefixlen
             ip = shared.IP(ip_addr, prefixlen, name)

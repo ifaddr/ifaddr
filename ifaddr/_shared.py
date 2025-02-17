@@ -52,7 +52,6 @@ class Adapter:
         index: Optional[int] = None,
         multicast: bool = True,
     ) -> None:
-
         #: Unique name that identifies the adapter in the system.
         #: On Linux this is of the form of `eth0` or `eth0:1`, on
         #: Windows it is a UUID in string representation, such as

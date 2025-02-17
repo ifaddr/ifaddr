@@ -25,7 +25,7 @@ jobs:
       run: |
         uv run pytest
         if uv run which mypy; then uv run mypy ifaddr; fi
-        if uv run which black; then uv run black --check . ; fi
+        uv run ruff format --check
     # Coveralls won't work here trivially because it can't ingest coverage.xml, so Codecov it is.
     # https://github.com/coverallsapp/github-action/issues/30
     - name: Report coverage to Codecov

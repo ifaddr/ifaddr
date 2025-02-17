@@ -35,11 +35,11 @@ keywords = [
 
 [dependency-groups]
 dev = [
-    "black ; implementation_name == 'cpython'",
     "mypy ; implementation_name == 'cpython'",
     "netifaces ; sys_platform != 'win32'",
     "pytest",
     "pytest-cov",
+    "ruff>=0.9.6",
 ]
 docs = [
     "furo>=2024.8.6",
@@ -58,6 +58,13 @@ packages = ["ifaddr"]
 
 [tool.hatch.build.targets.wheel.shared-data]
 "ifaddr/py.typed" = "ifaddr/py.typed"
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.format]
+quote-style = "single"
+docstring-code-format = true
 
 [tool.black]
 line-length = 100
