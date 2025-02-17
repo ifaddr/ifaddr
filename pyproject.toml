@@ -38,6 +38,9 @@ dev = [
     "pytest",
     "pytest-cov",
 ]
+docs = [
+    "sphinx>=7.4.7",
+]
 
 [project.urls]
 Homepage = "https://github.com/pydron/ifaddr"
