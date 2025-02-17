@@ -64,7 +64,7 @@ The library has only one function:
 And two simple classes:
 
 .. autoclass:: ifaddr.Adapter
-   :members: name, ips, nice_name
+   :members: name, ips, nice_name, index, multicast
 
 .. autoclass:: ifaddr.IP
    :members: ip, network_prefix, nice_name
