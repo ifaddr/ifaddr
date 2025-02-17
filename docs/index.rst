@@ -67,7 +67,7 @@ And two simple classes:
    :members: name, ips, nice_name, index, multicast
 
 .. autoclass:: ifaddr.IP
-   :members: ip, network_prefix, nice_name
+   :members: ip, network_prefix, nice_name, is_IPv4, is_IPv6
 
 -----------------------------------
 Bug Reports and other contributions
