@@ -25,7 +25,7 @@ compile anything, so there shouldn't be any surprises. Even on Windows.
 Project links:
 
 * `ifaddr GitHub page <https://github.com/smurn/ifaddr>`_
-* `ifaddr documentation (although there isn't much to document) <http://pythonhosted.org/ifaddr/>`_
+* `ifaddr documentation (although there isn't much to document) <https://ifaddr.readthedocs.io>`_
 * `ifaddr on PyPI <https://pypi.org/project/ifaddr/>`_
 
 
