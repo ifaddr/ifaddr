@@ -37,6 +37,7 @@ class Adapter:
     of this class. Each of those 'virtual' adapters can have both
     a IPv4 and an IPv6 IP address.
     """
+
     name: str
     nice_name: str
     ips: List['IP']
@@ -96,6 +97,7 @@ class IP:
     """
     Represents an IP address of an adapter.
     """
+
     ip: tuple[str, int, int] | str
     network_prefix: int
     nice_name: str
