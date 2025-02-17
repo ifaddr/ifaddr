@@ -1,4 +1,79 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ifaddr"
+version = "0.2.0"
+description = "Cross-platform network interface and IP address enumeration library"
+readme = "README.rst"
+authors = [
+    {name = "Stefan C. Mueller", email = "scm@smurn.org"},
+]
+maintainers = [
+    {name = "Jakub Stasiak", email = "jakub@stasiak.at"}
+]
+license = {text = "MIT"}
+requires-python = ">=3.9"
+classifiers = [
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: System :: Networking",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+keywords = [
+    "network interfaces",
+    "network adapters",
+    "network addresses",
+    "IP addresses",
+]
+
+[dependency-groups]
+dev = [
+    "black ; implementation_name == 'cpython'",
+    "mypy ; implementation_name == 'cpython'",
+    "netifaces ; sys_platform != 'win32'",
+    "pytest",
+    "pytest-cov",
+]
+docs = [
+    "furo>=2024.8.6",
+    "sphinx>=7.4.7",
+]
+
+[project.urls]
+Homepage = "https://github.com/pydron/ifaddr"
+
+[tool.hatch.build.targets.wheel]
+packages = ["ifaddr"]
+
+[tool.hatch.build.targets.wheel.shared-data]
+"ifaddr/py.typed" = "ifaddr/py.typed"
+
 [tool.black]
 line-length = 110
-target_version = ['py37', 'py38', 'py39', 'py310']
+target_version = ['py39', 'py310']
 skip_string_normalization = true
+
+[tool.mypy]
+# The warn_unused_configs flag may be useful to debug misspelled section names.
+warn_unused_configs = true
+
+# Shows a warning when returning a value with type 'Any' from
+# a function declared with a non-'Any' return type.
+warn_return_any = true
+
+# Disallows defining functions without type annotations
+# or with incomplete type annotations.
+disallow_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = "netifaces.*"
+
+# Suppresses error messages about imports that cannot be resolved.
+ignore_missing_imports = true

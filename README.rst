@@ -1,14 +1,14 @@
 ifaddr - Enumerate network interfaces/adapters and their IP addresses
 =====================================================================
 
-.. image:: https://github.com/pydron/ifaddr/workflows/CI/badge.svg
-    :target: https://github.com/pydron/ifaddr/actions?query=workflow%3ACI+branch%3Amaster
+.. image:: https://github.com/ifaddr/ifaddr/workflows/CI/badge.svg
+    :target: https://github.com/ifaddr/ifaddr/actions?query=workflow%3ACI+branch%3Amaster
 
 .. image:: https://img.shields.io/pypi/v/ifaddr.svg
     :target: https://pypi.python.org/pypi/ifaddr
 
-.. image:: https://codecov.io/gh/pydron/ifaddr/branch/master/graph/badge.svg
-  :target: https://codecov.io/gh/pydron/ifaddr
+.. image:: https://codecov.io/gh/ifaddr/ifaddr/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/ifaddr/ifaddr
 
 `ifaddr` is a small Python library that allows you to find all the Ethernet and
 IP addresses of the computer. It is tested on **Linux**, **OS X**, and
@@ -17,7 +17,7 @@ IP addresses of the computer. It is tested on **Linux**, **OS X**, and
 **Solaris/Illumos** should also work.
 
 This library is open source and released under the MIT License. It works
-with Python 3.8+.
+with Python 3.9+.
 
 You can install it with `pip install ifaddr`. It doesn't need to
 compile anything, so there shouldn't be any surprises. Even on Windows.
@@ -25,7 +25,7 @@ compile anything, so there shouldn't be any surprises. Even on Windows.
 Project links:
 
 * `ifaddr GitHub page <https://github.com/smurn/ifaddr>`_
-* `ifaddr documentation (although there isn't much to document) <http://pythonhosted.org/ifaddr/>`_
+* `ifaddr documentation (although there isn't much to document) <https://ifaddr.readthedocs.io>`_
 * `ifaddr on PyPI <https://pypi.org/project/ifaddr/>`_
 
 
@@ -63,7 +63,7 @@ You get both IPv4 and IPv6 addresses. The later complete with
 flowinfo and scope_id.
 
 If you wish to include network interfaces that do not have a configured IP
-addresss, pass the `include_unconfigured` parameter to `get_adapters()`.
+address, pass the `include_unconfigured` parameter to `get_adapters()`.
 Adapters with no configured IP addresses will have an zero-length `ips`
 property.  For example:
 
@@ -91,7 +91,7 @@ Not released yet
 
 Removed:
 
-* Dropped Python 3.7 support
+* Dropped Python 3.7 and 3.8 support
 
 0.2.0
 -----

@@ -27,7 +27,7 @@ from dataclasses import dataclass
 from typing import List, Optional, Union
 
 
-class Adapter(object):
+class Adapter:
     """
     Represents a network interface device controller (NIC), such as a
     network card. An adapter can have multiple IPs.
@@ -48,7 +48,7 @@ class Adapter(object):
         #: `{846EE342-7039-11DE-9D20-806E6F6E6963}`.
         self.name = name
 
-        #: Human readable name of the adpater. On Linux this
+        #: Human readable name of the adapter. On Linux this
         #: is currently the same as :attr:`name`. On Windows
         #: this is the name of the device.
         self.nice_name = nice_name
@@ -87,7 +87,7 @@ class IPv6Ext:
     scope_id: int
 
 
-class IP(object):
+class IP:
     """
     Represents an IP address of an adapter.
     """
