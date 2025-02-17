@@ -49,9 +49,9 @@ ifaddrs._fields_ = [
     ('ifa_netmask', ctypes.POINTER(shared.sockaddr)),
 ]
 
-libc = ctypes.CDLL(ctypes.util.find_library("socket" if os.uname()[0] == "SunOS" else "c"), use_errno=True)
+libc = ctypes.CDLL(ctypes.util.find_library('socket' if os.uname()[0] == 'SunOS' else 'c'), use_errno=True)
 
-if platform.system() == "Darwin" or "BSD" in platform.system():
+if platform.system() == 'Darwin' or 'BSD' in platform.system():
     IFF_MULTICAST = 1 << 15
 else:
     IFF_MULTICAST = 1 << 12

@@ -150,7 +150,7 @@ class IPAdapterAddress:
     # Not implemented yet: there's a bunch of extra properties left in IP_ADAPTER_ADDRESSES
 
 
-iphlpapi = ctypes.windll.LoadLibrary("Iphlpapi")
+iphlpapi = ctypes.windll.LoadLibrary('Iphlpapi')
 
 T = TypeVar('T', IP_ADAPTER_UNICAST_ADDRESS, IP_ADAPTER_FLAGS_ADDRESS)
 

@@ -70,7 +70,7 @@ class Adapter:
         self.multicast = multicast
 
     def __repr__(self) -> str:
-        return "Adapter(name={name}, nice_name={nice_name}, ips={ips}, index={index}, multicast={multicast})".format(
+        return 'Adapter(name={name}, nice_name={nice_name}, ips={ips}, index={index}, multicast={multicast})'.format(
             name=repr(self.name),
             nice_name=repr(self.nice_name),
             ips=repr(self.ips),
@@ -138,14 +138,14 @@ class IP:
         return isinstance(self.ip, tuple)
 
     def __repr__(self) -> str:
-        return "IP(ip={ip}, network_prefix={network_prefix}, nice_name={nice_name})".format(
+        return 'IP(ip={ip}, network_prefix={network_prefix}, nice_name={nice_name})'.format(
             ip=repr(self.ip), network_prefix=repr(self.network_prefix), nice_name=repr(self.nice_name)
         )
 
 
 import sys
 
-if sys.platform == "darwin" or sys.platform.startswith("freebsd") or sys.platform.startswith("openbsd"):
+if sys.platform == 'darwin' or sys.platform.startswith('freebsd') or sys.platform.startswith('openbsd'):
     # BSD derived systems use marginally different structures
     # than either Linux or Windows.
     # I still keep it in `shared` since we can use

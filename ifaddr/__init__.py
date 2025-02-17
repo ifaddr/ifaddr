@@ -23,7 +23,7 @@ import sys
 
 from ifaddr._shared import Adapter, IP
 
-if sys.platform == "win32":
+if sys.platform == 'win32':
     from ifaddr._win32 import get_adapters
 else:
     from ifaddr._posix import get_adapters
