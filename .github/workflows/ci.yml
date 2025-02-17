@@ -14,19 +14,18 @@ jobs:
         python-version: [3.9, "3.10", 3.11, 3.12, 3.13, pypy3.9, pypy3.10]
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
+    - name: Install uv and set the python version
+      uses: astral-sh/setup-uv@v5
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
-      run: |
-        pip install --upgrade '.[dev]'
+      run: uv sync
     - name: Run tests
       shell: bash
       run: |
-        pytest
-        if which mypy; then mypy ifaddr; fi
-        if which black; then black --check . ; fi
+        uv run pytest
+        if uv run which mypy; then uv run mypy ifaddr; fi
+        if uv run which black; then uv run black --check . ; fi
     # Coveralls won't work here trivially because it can't ingest coverage.xml, so Codecov it is.
     # https://github.com/coverallsapp/github-action/issues/30
     - name: Report coverage to Codecov
