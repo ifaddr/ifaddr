@@ -42,6 +42,7 @@ dev = [
     "pytest-cov",
 ]
 docs = [
+    "furo>=2024.8.6",
     "sphinx>=7.4.7",
 ]
 
