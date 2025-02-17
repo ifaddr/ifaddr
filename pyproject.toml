@@ -70,4 +70,3 @@ module = "netifaces.*"
 
 # Suppresses error messages about imports that cannot be resolved.
 ignore_missing_imports = true
-
