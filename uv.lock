@@ -146,7 +146,7 @@ name = "ifaddr"
 version = "0.2.0"
 source = { editable = "." }
 
-[package.optional-dependencies]
+[package.dev-dependencies]
 dev = [
     { name = "black", marker = "implementation_name == 'cpython'" },
     { name = "mypy", marker = "implementation_name == 'cpython'" },
@@ -156,14 +156,15 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [
-    { name = "black", marker = "implementation_name == 'cpython' and extra == 'dev'" },
-    { name = "mypy", marker = "implementation_name == 'cpython' and extra == 'dev'" },
-    { name = "netifaces", marker = "sys_platform != 'win32' and extra == 'dev'" },
-    { name = "pytest", marker = "extra == 'dev'" },
-    { name = "pytest-cov", marker = "extra == 'dev'" },
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "black", marker = "implementation_name == 'cpython'" },
+    { name = "mypy", marker = "implementation_name == 'cpython'" },
+    { name = "netifaces", marker = "sys_platform != 'win32'" },
+    { name = "pytest" },
+    { name = "pytest-cov" },
 ]
-provides-extras = ["dev"]
 
 [[package]]
 name = "iniconfig"

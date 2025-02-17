@@ -30,7 +30,7 @@ keywords = [
     "IP addresses",
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
     "black ; implementation_name == 'cpython'",
     "mypy ; implementation_name == 'cpython'",
