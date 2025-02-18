@@ -88,3 +88,6 @@ module = "netifaces.*"
 
 # Suppresses error messages about imports that cannot be resolved.
 ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+addopts = "-v --cov-report term --cov-report html --cov-report xml --cov-report term-missing --cov=ifaddr --cov-branch"
