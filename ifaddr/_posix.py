@@ -58,14 +58,56 @@ if platform.system() == 'Darwin' or 'BSD' in platform.system():
 else:
     IFF_MULTICAST = 1 << 12
 
+def get_interfaces_cmdline():
+    import os, re, ipaddress
+    ifaces = {}
+    curr_iface_name = None
+    curr_iface = None
+    try:
+        popen_pipe = os.popen('ifconfig')
+    except:
+        popen_pipe = []
+    for line in os.popen('ifconfig'):
+        match = re.match('^([a-zA-Z0-9]+):', line)
+        if match:
+            if curr_iface_name:
+                ifaces[curr_iface_name] = curr_iface
+            curr_iface_name = match.group(1)
+            curr_iface = {'multicast': False}
+            if 'MULTICAST' in line:
+                curr_iface['multicast'] = True
+            continue
+        match = re.match('\ *inet ([0-9\.]+)  netmask ([0-9\.]+)', line)
+        if match:
+            curr_iface[2] = []
+            curr_addr = {'addr': match.group(1), 'netmask': match.group(2)}
+            match = re.match('.* broadcast ([0-9\.]+)', line)
+            if match:
+                curr_addr['broadcast'] = match.group(1)
+            else:
+                match = re.match('.*  destination ([0-9\.]+)', line)
+                if match:
+                    curr_addr['peer'] = match.group(1)
+            curr_iface[2].append(curr_addr)
+            continue
+        match = re.match('\ *inet6 ([a-f0-9\.:]+)  prefixlen ([0-9]+)', line)
+        if match:
+            curr_iface[30] = []
+            network = ipaddress.IPv6Network(f'{match.group(1)}/{match.group(2)}', strict=False)
+            curr_addr = {'addr': match.group(1), 'prefix': match.group(2), 'netmask': f"{network.netmask.compressed}/{match.group(2)}"}
+            match = re.match('.* scopeid ([0-9x]+)', line)
+            if match:
+                curr_addr['scope'] = int(match.group(1), base=16)
+
+            curr_iface[30].append(curr_addr)
+    if curr_iface_name and curr_iface_name not in ifaces:
+        ifaces[curr_iface_name] = curr_iface
+    return ifaces
 
 def get_adapters(include_unconfigured: bool = False) -> Iterable[shared.Adapter]:
-    addr0 = addr = ctypes.POINTER(ifaddrs)()
-    retval = libc.getifaddrs(ctypes.byref(addr))
-    if retval != 0:
-        eno = ctypes.get_errno()
-        raise OSError(eno, os.strerror(eno))
-
+    #addr0 = addr = ctypes.POINTER(ifaddrs)()
+    #retval = libc.getifaddrs(ctypes.byref(addr))
+    retval = -1
     ips: Dict[str, shared.Adapter] = collections.OrderedDict()
 
     def add_ip(adapter_name: str, multicast: bool, ip: Optional[shared.IP]) -> None:
@@ -80,6 +122,28 @@ def get_adapters(include_unconfigured: bool = False) -> Iterable[shared.Adapter]
             )
         if ip is not None:
             ips[adapter_name].ips.append(ip)
+
+    if retval != 0:
+        eno = ctypes.get_errno()
+        interfaces = get_interfaces_cmdline()
+        for interface_name in interfaces.keys():
+            for addr_family in (2, 10):
+                if addr_family not in interfaces[interface_name]:
+                    continue
+                for addr in interfaces[interface_name][addr_family]:
+                    if 'prefix' not in addr:
+                        prefixlen = ipaddress.IPv4Network(addr['netmask']).prefixlen
+                    else:
+                        prefixlen = addr['prefix']
+                    addr_object = ipaddress.ip_address(addr['addr'])
+                    if isinstance(addr_object, ipaddress.IPv6Address):
+                        scope = addr.get('scope', 0)
+                        ip_obj = shared.IPv6Ext(addr_object.compressed, 0, scope)
+                    else:
+                        ip_obj = shared.IPv4Ext(addr_object.compressed)
+                    ip = shared.IP(ip_obj, prefixlen, interface_name)
+                    add_ip(interface_name, interfaces[interface_name]['multicast'], ip)
+        return ips.values()
 
     while addr:
         name = addr.contents.ifa_name.decode(encoding='UTF-8')
