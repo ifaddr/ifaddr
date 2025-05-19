@@ -105,9 +105,8 @@ def get_interfaces_cmdline():
     return ifaces
 
 def get_adapters(include_unconfigured: bool = False) -> Iterable[shared.Adapter]:
-    #addr0 = addr = ctypes.POINTER(ifaddrs)()
-    #retval = libc.getifaddrs(ctypes.byref(addr))
-    retval = -1
+    addr0 = addr = ctypes.POINTER(ifaddrs)()
+    retval = libc.getifaddrs(ctypes.byref(addr))
     ips: Dict[str, shared.Adapter] = collections.OrderedDict()
 
     def add_ip(adapter_name: str, multicast: bool, ip: Optional[shared.IP]) -> None:
