@@ -20,7 +20,8 @@
 
 
 import os
-import ctypes.util
+import ctypes
+import contextlib
 import ipaddress
 import collections
 import platform
@@ -49,9 +50,24 @@ ifaddrs._fields_ = [
     ('ifa_netmask', ctypes.POINTER(shared.sockaddr)),
 ]
 
-libc = ctypes.CDLL(
-    ctypes.util.find_library('socket' if os.uname()[0] == 'SunOS' else 'c'), use_errno=True
-)
+
+def _load_libc() -> ctypes.CDLL:
+    # The C library is already mapped into the process, so getifaddrs can
+    # normally be resolved straight from it. Going through
+    # ctypes.util.find_library imports shutil and the compression modules,
+    # which is a lot of overhead for a single symbol lookup.
+    with contextlib.suppress(OSError):
+        libc = ctypes.CDLL(None, use_errno=True)
+        if hasattr(libc, 'getifaddrs'):
+            return libc
+    from ctypes import util
+
+    name = 'socket' if os.uname()[0] == 'SunOS' else 'c'
+    return ctypes.CDLL(util.find_library(name), use_errno=True)  # type: ignore
+
+
+libc = _load_libc()
+
 
 if platform.system() == 'Darwin' or 'BSD' in platform.system():
     IFF_MULTICAST = 1 << 15

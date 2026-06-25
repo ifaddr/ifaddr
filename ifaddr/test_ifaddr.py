@@ -1,7 +1,9 @@
 # Copyright (C) 2015 Stefan C. Mueller
 
 import ipaddress
+import sys
 import unittest
+from unittest import mock
 
 import pytest
 
@@ -53,3 +55,27 @@ def test_ipv6_prefixlength() -> None:
         ipv6_prefixlength(ipaddress.IPv6Address('ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff')) == 128
     )
     assert ipv6_prefixlength(ipaddress.IPv6Address('ffff:ffff:ffff:ffff::')) == 64
+
+
+def test_load_libc_falls_back_to_find_library() -> None:
+    if sys.platform == 'win32':
+        pytest.skip('POSIX-only libc loading')
+
+    import ctypes
+    import ctypes.util
+
+    import ifaddr._posix
+
+    real_libc = ctypes.CDLL(ctypes.util.find_library('c'), use_errno=True)
+
+    def fake_cdll(name: object, *args: object, **kwargs: object) -> object:
+        # The process-wide handle does not expose getifaddrs here, so the
+        # find_library fallback path must run.
+        if name is None:
+            return object()
+        return real_libc
+
+    with mock.patch.object(ifaddr._posix.ctypes, 'CDLL', side_effect=fake_cdll):
+        libc = ifaddr._posix._load_libc()
+
+    assert hasattr(libc, 'getifaddrs')
