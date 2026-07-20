@@ -6,6 +6,9 @@ on:
 
 jobs:
   build:
+    # Tests and coverage reporting do not need to modify repository state.
+    permissions:
+      contents: read
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -14,6 +17,8 @@ jobs:
         python-version: ["3.10", 3.11, 3.12, 3.13, 3.14, pypy3.11]
     steps:
     - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
     - name: Install uv and set the python version
       uses: astral-sh/setup-uv@v5
       with:
