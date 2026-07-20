@@ -16,11 +16,11 @@ jobs:
         # Checked 2026-07-20: PyPy releases only support Python through 3.11.
         python-version: ["3.10", 3.11, 3.12, 3.13, 3.14, pypy3.11]
     steps:
-    - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       with:
         persist-credentials: false
     - name: Install uv and set the python version
-      uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
+      uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990 # v8.3.2
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
@@ -34,4 +34,4 @@ jobs:
     # Coveralls won't work here trivially because it can't ingest coverage.xml, so Codecov it is.
     # https://github.com/coverallsapp/github-action/issues/30
     - name: Report coverage to Codecov
-      uses: codecov/codecov-action@0fb7174895f61a3b6b78fc075e0cd60383518dac # v5
+      uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
