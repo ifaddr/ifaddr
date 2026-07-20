@@ -10,7 +10,7 @@ ifaddr - Enumerate network interfaces/adapters and their IP addresses
 .. image:: https://codecov.io/gh/ifaddr/ifaddr/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/ifaddr/ifaddr
 
-`ifaddr` is a small Python library that allows you to find all the Ethernet and
+``ifaddr`` is a small Python library that allows you to find all the Ethernet and
 IP addresses of the computer. It is tested on **Linux**, **OS X**, and
 **Windows**. Other BSD derivatives like **OpenBSD**, **FreeBSD**, and
 **NetBSD** should work too, but I haven't personally tested those.
@@ -19,7 +19,7 @@ IP addresses of the computer. It is tested on **Linux**, **OS X**, and
 This library is open source and released under the MIT License. It works
 with Python 3.10+.
 
-You can install it with `pip install ifaddr`. It doesn't need to
+You can install it with ``pip install ifaddr``. It doesn't need to
 compile anything, so there shouldn't be any surprises. Even on Windows.
 
 Project links:
@@ -63,8 +63,8 @@ You get both IPv4 and IPv6 addresses. The later complete with
 flowinfo and scope_id.
 
 If you wish to include network interfaces that do not have a configured IP
-address, pass the `include_unconfigured` parameter to `get_adapters()`.
-Adapters with no configured IP addresses will have an zero-length `ips`
+address, pass the ``include_unconfigured`` parameter to ``get_adapters()``.
+Adapters with no configured IP addresses will have an zero-length ``ips``
 property.  For example:
 
 .. code-block:: python
@@ -89,5 +89,5 @@ Alastair Houghton develops `netifaces  <https://pypi.python.org/pypi/netifaces>`
 which can do  everything this library can, and more. The only drawback is that it needs
 to be compiled, which can make the installation difficult.
 
-As of ifaddr 0.2.0 we implement the equivalent of `netifaces.interfaces()`. It's available through
-`ifaddr.netifaces.interfaces()`.
+As of ifaddr 0.2.0 we implement the equivalent of ``netifaces.interfaces()``. It's available through
+``ifaddr.netifaces.interfaces()``.
