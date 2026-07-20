@@ -6,7 +6,7 @@ Not released yet
 
 Removed:
 
-* Dropped Python 3.7 and 3.8 support
+* Dropped Python 3.7, 3.8 and 3.9 support
 
 v0.2.0
 ------
